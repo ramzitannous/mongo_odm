@@ -5,8 +5,8 @@ from motor_odm import (
     ImproperlyConfigured,
     configure,
     disconnect,
-    get_motor_client,
     get_db_name,
+    get_motor_client,
 )
 
 

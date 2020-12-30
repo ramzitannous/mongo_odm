@@ -1,10 +1,9 @@
 from typing import Tuple, Type, no_type_check
 
 from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase
-
 from motor_odm import get_db_name, get_motor_client
 from motor_odm.utils import to_snake_case, validate_collection_name
-from pydantic import BaseConfig, BaseModel
+from pydantic import BaseModel
 from pydantic.main import ModelMetaclass
 
 

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+from motor.motor_asyncio import AsyncIOMotorClient
 from motor_odm.exceptions import ImproperlyConfigured
 
 _motor_client: Optional[AsyncIOMotorClient] = None

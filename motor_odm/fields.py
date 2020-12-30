@@ -1,4 +1,4 @@
-from typing import Callable, Generator, Type
+from typing import Callable, Generator
 
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -9,7 +9,7 @@ class PrimaryID(str):
     @classmethod
     def __get_validators__(
         cls,
-    ) -> Generator[Callable[[Type["PrimaryID"], str], ObjectId], None, None]:
+    ) -> Generator[Callable[[str], ObjectId], None, None]:
         yield cls.validate
 
     @classmethod
