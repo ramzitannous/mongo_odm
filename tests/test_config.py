@@ -36,8 +36,6 @@ def test_get_configured_db_name_raises_error():
 def test_raises_exception_on_wrong_configuration():
     with pytest.raises(ImproperlyConfigured):
         get_motor_client()
-    with pytest.raises(ImproperlyConfigured):
-        get_db()
 
 
 def test_disconnects_correctly_if_configured():
