@@ -10,7 +10,8 @@ _db_name: Optional[str] = None
 def configure(motor_client: AsyncIOMotorClient, db_name: str) -> None:
     """
     Configure the used Motor client and database name,
-    should be called before any database connection eg. call it when server starts
+    should be called before any database connection and early as possible
+    especially before any document declaration
 
     :param motor_client: Instance of configured motor driver
     :param db_name: The name of the database used

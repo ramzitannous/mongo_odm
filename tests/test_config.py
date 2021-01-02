@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 import pytest
+
 from motor_odm import (
     ImproperlyConfigured,
     configure,
