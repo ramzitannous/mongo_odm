@@ -14,7 +14,9 @@
 <a href="https://dependabot.com/" target="_blank">
     <img src="https://flat.badgen.net/dependabot/ramzitannous/Motor_ODM?icon=dependabot" alt="Dependabot Enabled">
 </a>
-[![codecov](https://codecov.io/gh/ramzitannous/Motor_ODM/branch/master/graph/badge.svg?token=R7FUECGGNY)](https://codecov.io/gh/ramzitannous/Motor_ODM)
+<a href="https://codecov.io/gh/ramzitannous/Motor_ODM">
+    <img src="https://codecov.io/gh/ramzitannous/Motor_ODM/branch/master/graph/badge.svg?token=R7FUECGGNY"/>
+</a>
 <a href="https://pypi.org/project/motor_odm" target="_blank">
     <img src="https://img.shields.io/pypi/v/motor_odm?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
