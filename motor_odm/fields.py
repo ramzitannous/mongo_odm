@@ -15,6 +15,12 @@ class PrimaryID(str):
     @classmethod
     def validate(cls, v: str) -> ObjectId:
         try:
+            if isinstance(v, ObjectId) and ObjectId.is_valid(v):
+                return v
             return ObjectId(str(v))
         except InvalidId:
             raise InvalidFieldType("Not a valid ObjectId")
+
+    @classmethod
+    def __modify_schema__(cls, field_schema: dict) -> None:
+        field_schema.update(type="string")

@@ -20,3 +20,9 @@ class InvalidFieldName(ValueError):
     """
     Exception for invalid field names eg. $hello
     """
+
+
+class DocumentDoestNotExists(Exception):
+    """
+    Exception happens when document doesnt exist in the db
+    """

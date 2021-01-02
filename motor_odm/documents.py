@@ -1,49 +1,44 @@
+import typing
 from typing import Tuple, Type, no_type_check
 
+from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase
-from motor_odm import get_db_name, get_motor_client
+from motor_odm import PrimaryID, get_db_name, get_motor_client
 from motor_odm.utils import to_snake_case, validate_collection_name
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic.main import ModelMetaclass
+from pymongo.collection import Collection
+from motor_odm.exceptions import DocumentDoestNotExists
 
 
 class MongoDocumentBaseMetaData(ModelMetaclass):
-    """
-    Document MetaClass that configures common behaviour for MongoDocument
-    """
+    """Document MetaClass that configures common behaviour for MongoDocument"""
 
-    _collection_name: str
-    _db_name: str
+    if typing.TYPE_CHECKING:
+        _collection_name: str
+        _db_name: str
 
     @property
     def collection_name(self) -> str:
-        return MongoDocumentBaseMetaData._collection_name
+        return self._collection_name
 
     @property
     def db_name(self) -> str:
-        return MongoDocumentBaseMetaData._db_name
-
-    """
-        returns a reference of the used database
-    """
+        return self._db_name
 
     @property
     def db(self) -> AsyncIOMotorDatabase:
-        """
-        returns a reference of the used database
-        """
-        return get_motor_client()[self.db_name]
+        """returns a reference of the used database"""
+        return get_motor_client()[self._db_name]
 
     @property
     def collection(self) -> AsyncIOMotorCollection:
-        """
-        returns a reference of the used collection in the db
-        """
-        return get_motor_client()[self.db_name][self.collection_name]
+        """returns a reference of the used collection in the db"""
+        return get_motor_client()[self._db_name][self._collection_name]
 
     @staticmethod
     def _get_config(
-        meta_cls: Type["MongoDocument.Meta"], document_class_name: str
+        meta_cls: typing.Optional[Type["MongoDocument.Meta"]], document_class_name: str
     ) -> Tuple[str, str]:
         collection_name = to_snake_case(document_class_name)
         db_name = get_db_name()
@@ -71,49 +66,99 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
 
 
 class MongoDocumentMeta:
-    """
-    Document Meta that specify or override document default behaviour
-    """
+    """Document Meta that specify or override document default behaviour"""
 
-    """
-    Default collection name is the plural snake_case of the document class
+    """Default collection name is the plural snake_case of the document class
      eg. ProductItem -> product_items
-     this field overrides the default name to anything specified
-    """
+     this field overrides the default name to anything specified"""
     collection_name: str
 
-    """
-    overrides db_name from configuration
-    """
+    """overrides db_name from configuration"""
     db_name: str
 
 
 class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
-    """
-    Base Mongodb document that other documents should inherit to use common functionality,
+    """Base Mongodb document class that other documents should inherit to use common functionality,
     represents a document in mongodb collection
     primary id of type fields.PrimaryID is automatically generated
 
-    eg. without Meta class
+    eg. without Meta class:
 
     class PersonDocument(MongoDocument):
         age: int
+
         name: str
 
-    with Meta class to override configuration
+    with Meta class to override configuration:
 
     class PersonDocument(MongoDocument):
         age: int
+
         name: str
 
         class Meta:
             collection_name = 'person'
+
             db_name = 'people_db'
     """
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str, PrimaryID: str}
+        validate_assignment = True
 
     class Meta:
         collection_name = None
         db_name = None
+
+    id: typing.Optional[PrimaryID] = Field(alias="_id")
+
+    if typing.TYPE_CHECKING:
+        _db: AsyncIOMotorDatabase  # set by MongoDocumentBaseMetaData
+        _collection: Collection  # set by MongoDocumentBaseMetaData
+
+    async def save(self, *skip_fields: str) -> None:
+        """save a single document to collection
+
+        >>> document.save()
+
+        :param skip_fields: field names to skip
+        :return: None"""
+
+        json_document = self.dict(exclude=set(skip_fields))
+        _id = json_document.pop("id")
+        if self.id and ObjectId.is_valid(self.id):  # has id and valid id
+            new_document = await self._collection.replace_one(
+                {"_id": _id}, json_document, upsert=True
+            )
+            if new_document.upserted_id is not None:  # updated
+                self.id = new_document.upserted_id
+        else:
+            document = await self._collection.insert_one(json_document)
+            self.id = document.inserted_id
+
+    async def reload(self) -> None:
+        """reload document from db"""
+
+        if self.id is None:
+            raise DocumentDoestNotExists("document is not saved in the db")
+
+        document = await self._collection.find_one({"_id": self.id})
+        if document is None:
+            raise DocumentDoestNotExists(
+                f"can't reload document with id {self.id}, because it doesn't exists"
+            )
+        for k, v in document.items():
+            if k == "_id":
+                k = "id"
+            setattr(self, k, v)
+
+    async def delete(self) -> None:
+        """delete a document from db"""
+
+        result = await self._collection.delete_one({"_id": self.id})
+        if not result.deleted_count:
+            raise DocumentDoestNotExists(
+                f"can't delete document with id {self.id}, because it doesn't exists"
+            )

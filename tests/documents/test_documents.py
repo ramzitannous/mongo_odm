@@ -1,13 +1,16 @@
 from unittest.mock import MagicMock
 
-from motor_odm import configure
+from bson import ObjectId
+from motor_odm import configure, disconnect
 from motor_odm.documents import MongoDocument
+from tests.document import PersonDocument
 
 DB_NAME = "test_db"
 COLLECTION_NAME = "test_document"
 MOCKED_DB = MagicMock(name="db")
 MOCKED_COLLECTION = MagicMock(name="collection")
 MOCKED_DB.__getitem__ = lambda _, v: MOCKED_COLLECTION
+ID = "5349b4ddd2781d08c09890f3"
 
 
 def _setup_tests():
@@ -25,6 +28,7 @@ def test_document_without_meta_class():
 
     assert TestDocument.collection_name == COLLECTION_NAME
     assert TestDocument.db_name == DB_NAME
+    disconnect()
 
 
 def test_document_with_meta_class():
@@ -40,6 +44,7 @@ def test_document_with_meta_class():
 
     assert TestDocument.collection_name == "col"
     assert TestDocument.db_name == "db"
+    disconnect()
 
 
 def test_document_with_meta_class_get_collection_and_db():
@@ -53,3 +58,22 @@ def test_document_with_meta_class_get_collection_and_db():
     assert TestDocument.db_name == DB_NAME
     assert TestDocument.db is MOCKED_DB
     assert TestDocument.collection is MOCKED_COLLECTION
+    disconnect()
+
+
+def test_load_document_from_db():
+    db_document = {"_id": ObjectId(ID)}
+    document = MongoDocument(**db_document)
+    assert isinstance(document.id, ObjectId)
+
+
+def test_document_primary_key_serialization():
+    document = MongoDocument()
+    document.id = ObjectId(ID)
+    assert document.json()
+
+
+def test_document_type():
+    p = PersonDocument(age=10, name="ram")
+    assert type(p) == PersonDocument
+    assert isinstance(p, PersonDocument)

@@ -19,3 +19,4 @@ build/
 # OS X
 .DS_Store
 .venv
+.dmypy.json
