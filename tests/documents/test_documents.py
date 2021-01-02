@@ -1,6 +1,8 @@
 from unittest.mock import MagicMock
 
+import pytest
 from bson import ObjectId
+from pydantic import ValidationError
 
 from tests.document import PersonDocument
 
@@ -79,3 +81,9 @@ def test_document_type():
     p = PersonDocument(age=10, name="ram")
     assert type(p) == PersonDocument
     assert isinstance(p, PersonDocument)
+
+
+def test_document_validate_field():
+    p = PersonDocument(age=10, name="test")
+    with pytest.raises(ValidationError):
+        p.age = "ram"
