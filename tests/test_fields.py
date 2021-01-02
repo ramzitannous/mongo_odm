@@ -1,7 +1,8 @@
 import pytest
 from bson import ObjectId
-from motor_odm.fields import PrimaryID
 from pydantic import BaseModel
+
+from motor_odm.fields import PrimaryID
 
 
 def test_primary_key_field_serialization():
@@ -22,3 +23,9 @@ def test_invalid_primary_key():
     object_id = PrimaryID(str_id)
     with pytest.raises(ValueError):
         TestModel(id=object_id)
+
+
+def test_primary_key_schema():
+    schema = {}
+    PrimaryID.__modify_schema__(schema)
+    assert schema["type"] == "string"

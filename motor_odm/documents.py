@@ -1,5 +1,4 @@
-import typing
-from typing import Tuple, Type, no_type_check
+from typing import Tuple, Type, no_type_check, TYPE_CHECKING, Optional
 
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase
@@ -14,7 +13,7 @@ from motor_odm.exceptions import DocumentDoestNotExists
 class MongoDocumentBaseMetaData(ModelMetaclass):
     """Document MetaClass that configures common behaviour for MongoDocument"""
 
-    if typing.TYPE_CHECKING:
+    if TYPE_CHECKING:
         _collection_name: str
         _db_name: str
 
@@ -38,7 +37,7 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
 
     @staticmethod
     def _get_config(
-        meta_cls: typing.Optional[Type["MongoDocument.Meta"]], document_class_name: str
+        meta_cls: Optional[Type["MongoDocument.Meta"]], document_class_name: str
     ) -> Tuple[str, str]:
         collection_name = to_snake_case(document_class_name)
         db_name = get_db_name()
@@ -60,9 +59,12 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
 
         meta_cls = attr.pop("Meta", None)
         collection_name, db_name = MongoDocumentBaseMetaData._get_config(meta_cls, name)
-        mcs._collection_name = collection_name
-        mcs._db_name = db_name
-        return super().__new__(mcs, name, bases, attr)
+        attr["_collection_name"] = collection_name
+        attr["_db_name"] = db_name
+        attr["_collection"] = mcs.collection
+        attr["_db"] = mcs.db
+        created_class = super().__new__(mcs, name, bases, attr)
+        return created_class
 
 
 class MongoDocumentMeta:
@@ -112,9 +114,9 @@ class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
         collection_name = None
         db_name = None
 
-    id: typing.Optional[PrimaryID] = Field(alias="_id")
+    id: Optional[PrimaryID] = Field(alias="_id")
 
-    if typing.TYPE_CHECKING:
+    if TYPE_CHECKING:
         _db: AsyncIOMotorDatabase  # set by MongoDocumentBaseMetaData
         _collection: Collection  # set by MongoDocumentBaseMetaData
 

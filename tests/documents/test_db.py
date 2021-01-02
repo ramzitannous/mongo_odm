@@ -1,7 +1,11 @@
 import pytest
 from bson import ObjectId
-from motor_odm.exceptions import DocumentDoestNotExists
+
 from tests.document import PersonDocument
+
+from motor_odm.exceptions import DocumentDoestNotExists
+
+ID = "5349b4ddd2781d08c09890f3"
 
 
 @pytest.mark.asyncio
@@ -27,7 +31,7 @@ async def test_reload_document_not_exist():
     with pytest.raises(DocumentDoestNotExists):
         await t.reload()
     await t.save()
-    t.id = ObjectId("5349b4ddd2781d08c09890f3")
+    t.id = ObjectId(ID)
     with pytest.raises(DocumentDoestNotExists):
         await t.reload()
 
@@ -41,6 +45,17 @@ async def test_update_if_document_exists(event_loop):
     p.age = 20
     await p.save()
     assert p.id == old_id
+
+
+@pytest.mark.asyncio
+async def test_update_if_document_doesnt_exists(event_loop):
+    p = PersonDocument(age=10, name="ramzi")
+    await p.save()
+    assert p.id is not None
+    p.age = 20
+    p.id = ID
+    await p.save()
+    assert p.id == ObjectId(ID)
 
 
 @pytest.mark.asyncio

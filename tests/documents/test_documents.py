@@ -1,9 +1,11 @@
 from unittest.mock import MagicMock
 
 from bson import ObjectId
+
+from tests.document import PersonDocument
+
 from motor_odm import configure, disconnect
 from motor_odm.documents import MongoDocument
-from tests.document import PersonDocument
 
 DB_NAME = "test_db"
 COLLECTION_NAME = "test_document"

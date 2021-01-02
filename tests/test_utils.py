@@ -1,5 +1,6 @@
-import motor_odm.utils as utils
 import pytest
+
+import motor_odm.utils as utils
 from motor_odm.exceptions import InvalidCollectionName, InvalidFieldName
 
 
