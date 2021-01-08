@@ -87,3 +87,19 @@ def test_document_validate_field():
     p = PersonDocument(age=10, name="test")
     with pytest.raises(ValidationError):
         p.age = "ram"
+
+
+def test_embedded_document():
+    class EmbeddedDocument(MongoDocument):
+        age: int
+        name: str
+
+    class Document(MongoDocument):
+        embedded_document: EmbeddedDocument
+        salary: int
+
+    doc = Document(salary=10, embedded_document=EmbeddedDocument(age=10, name="ram"))
+    doc.save()
+
+    assert doc.id is not None
+    doc.reload()
