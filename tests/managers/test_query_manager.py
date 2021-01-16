@@ -1,6 +1,8 @@
 import pytest
-from motor_odm.exceptions import DocumentDoestNotExists
+
 from tests.document import PersonDocument
+
+from motor_odm.exceptions import DocumentDoestNotExists
 
 
 @pytest.mark.asyncio

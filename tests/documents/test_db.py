@@ -1,7 +1,9 @@
 import pytest
 from bson import ObjectId
-from motor_odm.exceptions import DocumentDoestNotExists
+
 from tests.document import PersonDocument
+
+from motor_odm.exceptions import DocumentDoestNotExists
 
 ID = "5349b4ddd2781d08c09890f3"
 

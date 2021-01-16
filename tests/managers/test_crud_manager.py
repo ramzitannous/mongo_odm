@@ -1,4 +1,5 @@
 import pytest
+
 from motor_odm.documents import MongoDocument
 
 

@@ -2,8 +2,9 @@ import asyncio
 
 import pytest
 from motor.motor_asyncio import AsyncIOMotorClient
-from motor_odm import configure, disconnect
 from pymongo import MongoClient
+
+from motor_odm import configure, disconnect
 
 DB_NAME = "motor_test_db"
 

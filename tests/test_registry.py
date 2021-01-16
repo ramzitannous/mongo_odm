@@ -1,4 +1,5 @@
 import pytest
+
 from motor_odm.exceptions import AlreadyRegistered
 from motor_odm.registry import DOCUMENTS_REGISTRY, clear_registry, register, unregister
 
