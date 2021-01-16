@@ -1,8 +1,7 @@
 import pytest
 from bson import ObjectId
-from pydantic import BaseModel
-
 from motor_odm.fields import PrimaryID
+from pydantic import BaseModel
 
 
 def test_primary_key_field_serialization():

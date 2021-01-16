@@ -6,6 +6,8 @@ from motor_odm.exceptions import InvalidFieldType
 
 
 class PrimaryID(str):
+    """represent mongodb _id field of type bson.ObjectID"""
+
     @classmethod
     def __get_validators__(
         cls,
