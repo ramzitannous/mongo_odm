@@ -22,9 +22,16 @@ def clean_up(loop):
     loop.run_until_complete(motor_client.drop_database(DB_NAME))
 
 
-@pytest.fixture(scope="session")
+clean_up(io_loop)
+
+
+@pytest.fixture(scope="function")
 def event_loop():
     configure(motor_client, DB_NAME)
     yield io_loop
+
+
+@pytest.fixture(scope="session", autouse=True)
+def teardown():
+    yield None
     clean_up(io_loop)
-    io_loop.close()

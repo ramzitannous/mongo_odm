@@ -65,3 +65,10 @@ async def test_delete_document(event_loop):
     await p.delete()
     with pytest.raises(DocumentDoestNotExists):  # check it doesn't exists
         await p.delete()
+
+
+@pytest.mark.asyncio
+async def test_validate_saving(event_loop):
+    p = PersonDocument(name=10, age="10")
+    p.age = False
+    await p.save()

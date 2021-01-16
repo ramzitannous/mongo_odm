@@ -26,19 +26,19 @@ def _setup_tests():
 def test_document_without_meta_class():
     _setup_tests()
 
-    class TestDocument(MongoDocument):
+    class TestDocument1(MongoDocument):
         age: int
         name: str
 
-    assert TestDocument.collection_name == COLLECTION_NAME
-    assert TestDocument.db_name == DB_NAME
+    assert TestDocument1.collection_name == "test_document1"
+    assert TestDocument1.db_name == DB_NAME
     disconnect()
 
 
 def test_document_with_meta_class():
     _setup_tests()
 
-    class TestDocument(MongoDocument):
+    class TestDocument2(MongoDocument):
         age: int
         name: str
 
@@ -46,22 +46,22 @@ def test_document_with_meta_class():
             collection_name = "col"
             db_name = "db"
 
-    assert TestDocument.collection_name == "col"
-    assert TestDocument.db_name == "db"
+    assert TestDocument2.collection_name == "col"
+    assert TestDocument2.db_name == "db"
     disconnect()
 
 
 def test_document_with_meta_class_get_collection_and_db():
     _setup_tests()
 
-    class TestDocument(MongoDocument):
+    class TestDocument3(MongoDocument):
         age: int
         name: str
 
-    assert TestDocument.collection_name == COLLECTION_NAME
-    assert TestDocument.db_name == DB_NAME
-    assert TestDocument.db is MOCKED_DB
-    assert TestDocument.collection is MOCKED_COLLECTION
+    assert TestDocument3.collection_name == "test_document3"
+    assert TestDocument3.db_name == DB_NAME
+    assert TestDocument3.db is MOCKED_DB
+    assert TestDocument3.collection is MOCKED_COLLECTION
     disconnect()
 
 
@@ -87,19 +87,3 @@ def test_document_validate_field():
     p = PersonDocument(age=10, name="test")
     with pytest.raises(ValidationError):
         p.age = "ram"
-
-
-def test_embedded_document():
-    class EmbeddedDocument(MongoDocument):
-        age: int
-        name: str
-
-    class Document(MongoDocument):
-        embedded_document: EmbeddedDocument
-        salary: int
-
-    doc = Document(salary=10, embedded_document=EmbeddedDocument(age=10, name="ram"))
-    doc.save()
-
-    assert doc.id is not None
-    doc.reload()

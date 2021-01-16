@@ -37,8 +37,6 @@ def disconnect() -> None:
 
     if _motor_client is not None:
         _motor_client.close()
-        _motor_client = None
-        _db_name = None
 
 
 def get_motor_client() -> AsyncIOMotorClient:

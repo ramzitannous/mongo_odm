@@ -1,28 +1,26 @@
 class ImproperlyConfigured(ValueError):
-    """
-    Exception for wrong configuration
-    """
+    """Exception for wrong configuration"""
 
 
 class InvalidFieldType(TypeError):
-    """
-    Exception for invalid fields
-    """
+    """Exception for invalid fields"""
 
 
 class InvalidCollectionName(ValueError):
-    """
-    Exception for invalid collection name eg. $person
-    """
+    """Exception for invalid collection name eg. $person"""
 
 
 class InvalidFieldName(ValueError):
-    """
-    Exception for invalid field names eg. $hello
-    """
+    """Exception for invalid field names eg. $hello"""
 
 
 class DocumentDoestNotExists(Exception):
-    """
-    Exception happens when document doesnt exist in the db
-    """
+    """Exception happens when document doesnt exist in the db"""
+
+
+class AlreadyRegistered(Exception):
+    """Exception for registry"""
+
+
+class PrimaryKeyException(ValueError):
+    """All Exceptions related to _id"""

@@ -4,6 +4,7 @@ import pytest
 
 from motor_odm import (
     ImproperlyConfigured,
+    config,
     configure,
     disconnect,
     get_db_name,
@@ -30,11 +31,13 @@ def test_get_configured_db_name():
 
 
 def test_get_configured_db_name_raises_error():
+    setattr(config, "_db_name", None)
     with pytest.raises(ImproperlyConfigured):
         get_db_name()
 
 
 def test_raises_exception_on_wrong_configuration():
+    setattr(config, "_motor_client", None)
     with pytest.raises(ImproperlyConfigured):
         get_motor_client()
 

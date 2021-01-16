@@ -1,13 +1,29 @@
-from typing import Tuple, Type, no_type_check, TYPE_CHECKING, Optional
+from typing import (
+    Tuple,
+    Type,
+    no_type_check,
+    TYPE_CHECKING,
+    Optional,
+    List,
+    Union,
+    Callable,
+    Any,
+)
 
 from bson import ObjectId
-from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase
+from motor.motor_asyncio import AsyncIOMotorDatabase
+
 from motor_odm import PrimaryID, get_db_name, get_motor_client
+from motor_odm.registry import register
 from motor_odm.utils import to_snake_case, validate_collection_name
 from pydantic import BaseModel, Field
 from pydantic.main import ModelMetaclass
 from pymongo.collection import Collection
 from motor_odm.exceptions import DocumentDoestNotExists
+from motor_odm.managers import MongoBaseManager, MongoDefaultManager
+
+if TYPE_CHECKING:
+    from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, DictStrAny
 
 
 class MongoDocumentBaseMetaData(ModelMetaclass):
@@ -31,7 +47,7 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
         return get_motor_client()[self._db_name]
 
     @property
-    def collection(self) -> AsyncIOMotorCollection:
+    def collection(self) -> Collection:
         """returns a reference of the used collection in the db"""
         return get_motor_client()[self._db_name][self._collection_name]
 
@@ -61,9 +77,17 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
         collection_name, db_name = MongoDocumentBaseMetaData._get_config(meta_cls, name)
         attr["_collection_name"] = collection_name
         attr["_db_name"] = db_name
-        attr["_collection"] = mcs.collection
-        attr["_db"] = mcs.db
         created_class = super().__new__(mcs, name, bases, attr)
+        # add default manager
+        created_class.objects = MongoDefaultManager()
+        created_class.objects.add_to_class(created_class)
+        register(created_class)
+
+        # add class reference to managers
+        for attr_name, attr_value in attr.items():
+            if isinstance(attr_value, MongoBaseManager):
+                attr_value.add_to_class(created_class)
+                setattr(created_class, attr_name, attr_value)
         return created_class
 
 
@@ -104,6 +128,13 @@ class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
             db_name = 'people_db'
     """
 
+    if TYPE_CHECKING:
+        collection: Collection
+        collection_name: str
+        db_name: str
+        db: AsyncIOMotorDatabase
+        objects: MongoDefaultManager
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -116,19 +147,85 @@ class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
 
     id: Optional[PrimaryID] = Field(alias="_id")
 
-    if TYPE_CHECKING:
-        _db: AsyncIOMotorDatabase  # set by MongoDocumentBaseMetaData
-        _collection: Collection  # set by MongoDocumentBaseMetaData
+    @property
+    def _db(self) -> AsyncIOMotorDatabase:
+        return self.__class__.db
 
-    async def save(self, *skip_fields: str) -> None:
+    @property
+    def _collection(self) -> Collection:
+        return self.__class__.collection
+
+    def _exclude_managers(self) -> List[str]:
+        excluded_fields = []
+        for field_name, field in self.__fields__.items():
+            if issubclass(field.type_, MongoBaseManager):
+                excluded_fields.append(field_name)
+        return excluded_fields
+
+    def dict(
+        self,
+        *,
+        include: Union["AbstractSetIntStr", "MappingIntStrAny"] = None,
+        exclude: Union["AbstractSetIntStr", "MappingIntStrAny"] = None,
+        by_alias: bool = False,
+        skip_defaults: bool = None,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ) -> "DictStrAny":
+
+        excluded_managers = self._exclude_managers()
+        if exclude is not None:
+            new_excluded_fields = {*excluded_managers, *exclude}
+        else:
+            new_excluded_fields = {*excluded_managers}
+        return super().dict(
+            include=include,
+            exclude=new_excluded_fields,
+            by_alias=by_alias,
+            skip_defaults=skip_defaults,
+            exclude_unset=exclude_unset,
+            exclude_defaults=exclude_defaults,
+            exclude_none=exclude_none,
+        )
+
+    def json(
+        self,
+        *,
+        include: Union["AbstractSetIntStr", "MappingIntStrAny"] = None,
+        exclude: Union["AbstractSetIntStr", "MappingIntStrAny"] = None,
+        by_alias: bool = False,
+        skip_defaults: bool = None,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        encoder: Optional[Callable[[Any], Any]] = None,
+        **dumps_kwargs: Any,
+    ) -> str:
+        excluded_managers = self._exclude_managers()
+        if exclude is not None:
+            new_excluded_fields = {*excluded_managers, *exclude}
+        else:
+            new_excluded_fields = {*excluded_managers}
+        return super().json(
+            include=include,
+            exclude=new_excluded_fields,
+            by_alias=by_alias,
+            skip_defaults=skip_defaults,
+            exclude_unset=exclude_unset,
+            exclude_defaults=exclude_defaults,
+            exclude_none=exclude_none,
+            encoder=encoder,
+            **dumps_kwargs,
+        )
+
+    async def save(self, *excluded_fields: str) -> None:
         """save a single document to collection
 
-        >>> document.save()
-
-        :param skip_fields: field names to skip
+        :param excluded_fields: field names to exclude
         :return: None"""
 
-        json_document = self.dict(exclude=set(skip_fields))
+        json_document = self.dict(exclude=set(excluded_fields))
         _id = json_document.pop("id")
         if self.id and ObjectId.is_valid(self.id):  # has id and valid id
             new_document = await self._collection.replace_one(
