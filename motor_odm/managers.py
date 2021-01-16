@@ -1,4 +1,4 @@
-from typing import Any, List, TYPE_CHECKING, Type
+from typing import Any, List, TYPE_CHECKING, Type, Union
 
 from bson import ObjectId
 
@@ -45,6 +45,16 @@ class MongoCrudManager(MongoBaseManager):
             obj.id = _id
             results_objs.append(obj)
         return results_objs
+
+    async def bulk_delete(self, ids: List[Union[ObjectId, str]]) -> int:
+        """delete many objects using ids
+        :type ids: id of objects to delete
+        :returns int number of deleted objects
+        """
+
+        delete_filter = {"_id": {"$in": ids}}
+        results = await self._document_class.collection.delete_many(delete_filter)
+        return results.deleted_count
 
 
 class MongoQueryManager(MongoBaseManager):
