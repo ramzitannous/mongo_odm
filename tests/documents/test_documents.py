@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 from bson import ObjectId
 from pydantic import Field, ValidationError
+
 from tests.document import PersonDocument
 
 from motor_odm.config import configure, disconnect
