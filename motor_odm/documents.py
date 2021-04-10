@@ -1,35 +1,43 @@
 from typing import (
+    Generic,
     Tuple,
     Type,
     no_type_check,
     TYPE_CHECKING,
     Optional,
     List,
+    TypeVar,
     Union,
     Callable,
     Any,
+    Dict,
 )
 
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from pydantic.fields import ModelField
+from pydantic.schema import default_ref_template
 
-from motor_odm import PrimaryID, get_db_name, get_motor_client
+from motor_odm.config import get_motor_client, get_db_name
+from motor_odm.fields import PrimaryID
 from motor_odm.registry import register
-from motor_odm.utils import to_snake_case, validate_collection_name
+from motor_odm.utils import replace_id_field, to_snake_case, validate_collection_name
 from pydantic import BaseModel, Field
 from pydantic.main import ModelMetaclass
 from pymongo.collection import Collection
 from motor_odm.exceptions import DocumentDoestNotExists
-from motor_odm.managers import MongoBaseManager, MongoDefaultManager
+from motor_odm.managers import MongoBaseManager, MongoQueryManager
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, DictStrAny
+
+T = TypeVar("T", bound="MongoDocument")
 
 
 class MongoDocumentBaseMetaData(ModelMetaclass):
     """Document MetaClass that configures common behaviour for MongoDocument"""
 
-    if TYPE_CHECKING:
+    if TYPE_CHECKING:  # pragma: no cover
         _collection_name: str
         _db_name: str
 
@@ -68,6 +76,25 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
 
         return collection_name, db_name
 
+    @staticmethod
+    def _manager_field_names(cls: Type["MongoDocument"]) -> List[str]:
+        manager_fields = []
+        for field_name, field in cls.__fields__.items():
+            if issubclass(field.type_, MongoBaseManager):
+                manager_fields.append(field_name)
+        return manager_fields
+
+    @classmethod
+    def _fields_without_managers(
+        mcs,
+        mongo_document: Type["MongoDocument"],
+    ) -> Dict[str, ModelField]:
+        manager_fields_names = mcs._manager_field_names(mongo_document)
+        all_fields = mongo_document.__fields__.copy()
+        for manager_field_name in manager_fields_names:
+            del all_fields[manager_field_name]
+        return all_fields
+
     @no_type_check
     def __new__(mcs, name: str, bases: Tuple[type], attr: dict):
         if name == "MongoDocument":
@@ -78,16 +105,30 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
         attr["_collection_name"] = collection_name
         attr["_db_name"] = db_name
         created_class = super().__new__(mcs, name, bases, attr)
-        # add default manager
-        created_class.objects = MongoDefaultManager()
-        created_class.objects.add_to_class(created_class)
-        register(created_class)
+
+        # create manager instance
+        created_class.objects = MongoQueryManager()
+
+        # set some magic methods on document class
+        setattr(
+            created_class,
+            "__fields_without_managers__",
+            mcs._fields_without_managers(created_class),
+        )
+        setattr(
+            created_class,
+            "__manager_field_names__",
+            mcs._manager_field_names(created_class),
+        )
 
         # add class reference to managers
+        created_class.objects.add_to_class(created_class)
+        register(created_class)
         for attr_name, attr_value in attr.items():
             if isinstance(attr_value, MongoBaseManager):
                 attr_value.add_to_class(created_class)
                 setattr(created_class, attr_name, attr_value)
+
         return created_class
 
 
@@ -103,7 +144,7 @@ class MongoDocumentMeta:
     db_name: str
 
 
-class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
+class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
     """Base Mongodb document class that other documents should inherit to use common functionality,
     represents a document in mongodb collection
     primary id of type fields.PrimaryID is automatically generated
@@ -128,18 +169,22 @@ class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
             db_name = 'people_db'
     """
 
-    if TYPE_CHECKING:
+    # added by metaclass
+    if TYPE_CHECKING:  # pragma: no cover
         collection: Collection
         collection_name: str
         db_name: str
         db: AsyncIOMotorDatabase
-        objects: MongoDefaultManager
+        objects: MongoQueryManager[T]
+        __fields_without_managers__: Dict[str, ModelField]
+        __manager_field_names__: List[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str, PrimaryID: str}
         validate_assignment = True
+        allow_population_by_field_name = True
 
     class Meta:
         collection_name = None
@@ -151,16 +196,27 @@ class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
     def _db(self) -> AsyncIOMotorDatabase:
         return self.__class__.db
 
+    @classmethod
+    def schema(
+        cls, by_alias: bool = False, ref_template: str = default_ref_template
+    ) -> "DictStrAny":
+        return super().schema(by_alias, ref_template)
+
+    @classmethod
+    def schema_json(
+        cls,
+        *,
+        by_alias: bool = False,
+        ref_template: str = default_ref_template,
+        **dumps_kwargs: Any,
+    ) -> str:
+        return super().schema_json(
+            by_alias=by_alias, ref_template=ref_template, **dumps_kwargs
+        )
+
     @property
     def _collection(self) -> Collection:
         return self.__class__.collection
-
-    def _exclude_managers(self) -> List[str]:
-        excluded_fields = []
-        for field_name, field in self.__fields__.items():
-            if issubclass(field.type_, MongoBaseManager):
-                excluded_fields.append(field_name)
-        return excluded_fields
 
     def dict(
         self,
@@ -174,11 +230,10 @@ class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
         exclude_none: bool = False,
     ) -> "DictStrAny":
 
-        excluded_managers = self._exclude_managers()
         if exclude is not None:
-            new_excluded_fields = {*excluded_managers, *exclude}
+            new_excluded_fields = {*self.__manager_field_names__, *exclude}
         else:
-            new_excluded_fields = {*excluded_managers}
+            new_excluded_fields = {*self.__manager_field_names__}
         return super().dict(
             include=include,
             exclude=new_excluded_fields,
@@ -202,11 +257,10 @@ class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
         encoder: Optional[Callable[[Any], Any]] = None,
         **dumps_kwargs: Any,
     ) -> str:
-        excluded_managers = self._exclude_managers()
         if exclude is not None:
-            new_excluded_fields = {*excluded_managers, *exclude}
+            new_excluded_fields = {*self.__manager_field_names__, *exclude}
         else:
-            new_excluded_fields = {*excluded_managers}
+            new_excluded_fields = {*self.__manager_field_names__}
         return super().json(
             include=include,
             exclude=new_excluded_fields,
@@ -261,3 +315,16 @@ class MongoDocument(BaseModel, metaclass=MongoDocumentBaseMetaData):
             raise DocumentDoestNotExists(
                 f"can't delete document with id {self.id}, because it doesn't exists"
             )
+
+
+def construct_document_with_default_values(
+    document_dict: Dict[str, Any], document_class: Type[T]
+) -> T:
+    all_fields = document_class.__fields_without_managers__.keys()
+    document_dict_with_id = replace_id_field(document_dict)
+    new_document_fields = {}
+    for field in all_fields:
+        field_default_value = document_class.__fields__[field].get_default()
+        field_value = document_dict_with_id.get(field, field_default_value)
+        new_document_fields[field] = field_value
+    return document_class.construct(**new_document_fields)

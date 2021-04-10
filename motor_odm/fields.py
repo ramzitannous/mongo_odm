@@ -26,3 +26,4 @@ class PrimaryID(str):
     @classmethod
     def __modify_schema__(cls, field_schema: dict) -> None:
         field_schema.update(type="string")
+        field_schema.update(title="Id")

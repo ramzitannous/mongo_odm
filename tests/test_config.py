@@ -1,10 +1,11 @@
 from unittest.mock import MagicMock
 
 import pytest
+from tests.document import PersonDocument
 
-from motor_odm import (
+import motor_odm.config as config
+from motor_odm.config import (
     ImproperlyConfigured,
-    config,
     configure,
     disconnect,
     get_db_name,
@@ -28,6 +29,18 @@ def test_get_configured_db_name():
     configure(MagicMock(), db_name)
     assert get_db_name() == db_name
     disconnect()
+
+
+def test_configured_raises_error_if_motor_none_used():
+    with pytest.raises(ImproperlyConfigured):
+        # noinspection PyTypeChecker
+        configure(None, "test")  # type: ignore
+
+
+def test_configured_raises_error_if_db_name_none_used():
+    with pytest.raises(ImproperlyConfigured):
+        # noinspection PyTypeChecker
+        configure(MagicMock(), None)  # type: ignore
 
 
 def test_get_configured_db_name_raises_error():
