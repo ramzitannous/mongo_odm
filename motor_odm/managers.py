@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import logging
 from typing import (
     Any,
     Dict,
@@ -17,10 +19,12 @@ from bson import ObjectId
 from motor_odm.cursor import MongoCursor
 from motor_odm.exceptions import DocumentDoestNotExists, FieldNotFoundOnDocument
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from motor_odm.documents import MongoDocument  # noqa
 
 T = TypeVar("T", bound="MongoDocument")
+
+logger = logging.getLogger("manager")
 
 
 class MongoBaseManager(Generic[T]):
@@ -106,6 +110,17 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
                 f" of type {self._document_class.__name__}"
             )
 
+    def _clone(self) -> "MongoBaseQueryManager[T]":
+        """create a new MongoBaseQueryManager quickly"""
+        new_manager: MongoBaseQueryManager[T] = MongoBaseQueryManager()
+        new_manager._filter = self._filter.copy()
+        new_manager._limit = self._limit
+        new_manager._skip = self._skip
+        new_manager._projected_fields = self._projected_fields.copy()
+        new_manager._document_class = self._document_class
+        new_manager._all_document_fields = self._all_document_fields.copy()
+        return new_manager
+
     def only(self, *fields: str) -> "MongoBaseQueryManager[T]":
         """only return fields when creating a query
 
@@ -113,9 +128,10 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         :return: new query
         """
         fields_set = set(fields)
-        self._check_fields_exist_in_document(fields_set)
-        self._projected_fields = fields_set
-        return self
+        new_manager = self._clone()
+        new_manager._check_fields_exist_in_document(fields_set)
+        new_manager._projected_fields = fields_set
+        return new_manager
 
     def exclude(self, *fields: str) -> "MongoBaseQueryManager[T]":
         """exclude fields from being returned when querying
@@ -124,9 +140,10 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         :return: new query
         """
         fields_set = set(fields)
-        self._check_fields_exist_in_document(fields_set)
-        self._projected_fields = self._all_document_fields - fields_set
-        return self
+        new_manager = self._clone()
+        new_manager._check_fields_exist_in_document(fields_set)
+        new_manager._projected_fields = new_manager._all_document_fields - fields_set
+        return new_manager
 
     def filter(self, **filter_kwargs: Any) -> "MongoBaseQueryManager[T]":
         """add the filter for mongodb find, filter result is not evaluated,
@@ -135,8 +152,29 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         :param filter_kwargs: the filter to apply as a kwargs
         :return: new query
         """
-        self._filter = filter_kwargs
-        return self
+        new_manager = self._clone()
+        new_manager._filter = filter_kwargs
+        return new_manager
+
+    def raw_cursor(self) -> MongoCursor[T]:
+        """fetch all documents that matches filter and return a raw cursor
+
+        :return: MongoCursor[T]
+        """
+        async_cursor = MongoCursor(
+            self._document_class,
+            self._document_class.collection.delegate.find(
+                self._filter,
+                projection=list(self._projected_fields),
+            ),
+        )
+        if self._skip is not None:
+            async_cursor = async_cursor.skip(self._skip)
+        if self._limit is not None:
+            async_cursor = async_cursor.limit(self._limit)
+        self._result_cache = async_cursor
+
+        return async_cursor
 
     async def all(self) -> List[T]:
         """fetch all documents that matches filter
@@ -151,7 +189,10 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
             ),
         )
         self._result_cache = async_cursor
-        result = await async_cursor.skip(self._skip).to_list(length=self._limit)
+        if self._skip is not None:
+            result = await async_cursor.skip(self._skip).to_list(length=self._limit)
+        else:
+            result = await async_cursor.to_list(length=self._limit)
         return result
 
     async def first(self) -> Optional[T]:
@@ -195,8 +236,9 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         :param count: max count
         :return: MongoBaseQueryBuilder
         """
-        self._limit = count
-        return self
+        new_manager = self._clone()
+        new_manager._limit = count
+        return new_manager
 
     def skip(self, skip: int) -> "MongoBaseQueryManager[T]":
         """
@@ -204,8 +246,9 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         :param skip: skip document
         :return: MongoBaseQueryBuilder
         """
-        self._skip = skip
-        return self
+        new_manager = self._clone()
+        new_manager._skip = skip
+        return new_manager
 
     async def get(self, **kwargs: Any) -> T:
         """get a document using its fields as filter options
@@ -226,6 +269,25 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         if result is None:
             raise DocumentDoestNotExists(f"Document with {kwargs} doesnt exists")
         return self._document_class(**result)
+
+    async def delete(self) -> int:
+        """delete all documents that matches filter
+
+        :return: int, number of deleted documents
+        """
+        result = await self._document_class.collection.delete_many(self._filter)
+        return result.deleted_count
+
+    def debug(self) -> dict:
+        """log all fields for debug purpose"""
+        debug_info = {
+            **self._filter,
+            "skip": self._skip,
+            "limit": self._limit,
+            "projection": self._projected_fields,
+        }
+        logger.debug(debug_info)
+        return debug_info
 
 
 class MongoQueryManager(MongoBaseQueryManager[T]):

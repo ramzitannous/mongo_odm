@@ -27,4 +27,4 @@ def test_to_snake_conversion(name: str, expected: str):
 def test_replace_id():
     test_dict = {"_id": "test", "hello": {"_id": "hi"}}
     expected_dict = {"id": "test", "hello": {"id": "hi"}}
-    assert replace_id_field(test_dict) == expected_dict
+    assert utils.replace_id_field(test_dict) == expected_dict

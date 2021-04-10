@@ -1,9 +1,4 @@
-from typing import (
-    Generic,
-    List,
-    Optional,
-    TypeVar,
-)
+from typing import Generic, List, Optional, TypeVar
 
 from typing import Type, TYPE_CHECKING
 
@@ -11,13 +6,14 @@ from motor.motor_asyncio import AsyncIOMotorCursor
 from pymongo.cursor import Cursor
 
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from motor_odm.documents import MongoDocument  # noqa
 
 T = TypeVar("T", bound="MongoDocument")
 
 
 class MongoCursor(Generic[T], AsyncIOMotorCursor):
+
     if TYPE_CHECKING:  # pragma: no cover
         _document_class: Type[T]
         _cursor: Cursor
@@ -42,9 +38,12 @@ class MongoCursor(Generic[T], AsyncIOMotorCursor):
         from motor_odm.documents import construct_document_with_default_values
 
         dict_documents = await super().to_list(length=length)
-        return [
-            construct_document_with_default_values(obj, self._document_class)
-            for obj in dict_documents
-        ]
+        result = map(
+            lambda obj: construct_document_with_default_values(
+                obj, self._document_class
+            ),
+            dict_documents,
+        )
+        return list(result)
 
     __anext__ = next

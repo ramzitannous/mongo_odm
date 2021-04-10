@@ -327,4 +327,4 @@ def construct_document_with_default_values(
         field_default_value = document_class.__fields__[field].get_default()
         field_value = document_dict_with_id.get(field, field_default_value)
         new_document_fields[field] = field_value
-    return document_class.construct(**new_document_fields)
+    return document_class.parse_obj(new_document_fields)
