@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 import pytest
+from tests.document import PersonDocument
 
 import motor_odm.config as config
 from motor_odm.config import (
