@@ -22,9 +22,3 @@ def test_invalid_field_name(name: str):
 )
 def test_to_snake_conversion(name: str, expected: str):
     assert utils.to_snake_case(name) == expected
-
-
-def test_replace_id():
-    test_dict = {"_id": "test", "hello": {"_id": "hi"}}
-    expected_dict = {"id": "test", "hello": {"id": "hi"}}
-    assert utils.replace_id_field(test_dict) == expected_dict
