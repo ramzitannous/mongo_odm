@@ -28,20 +28,14 @@ class MongoCursor(Generic[T], AsyncIOMotorCursor):
         super().__init__(cursor, self._document_class.collection)
 
     async def next(self) -> T:
-        from motor_odm.documents import construct_document_with_default_values
-
         # need to override the next to covert it to T
         dict_result = await super().next()
-        return construct_document_with_default_values(dict_result, self._document_class)
+        return self._document_class.construct(**dict_result)
 
     async def to_list(self, length: Optional[int]) -> List[T]:
-        from motor_odm.documents import construct_document_with_default_values
-
         dict_documents = await super().to_list(length=length)
         result = map(
-            lambda obj: construct_document_with_default_values(
-                obj, self._document_class
-            ),
+            lambda obj: self._document_class.construct(**obj),
             dict_documents,
         )
         return list(result)

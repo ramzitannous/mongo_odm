@@ -28,3 +28,7 @@ class PrimaryKeyException(ValueError):
 
 class FieldNotFoundOnDocument(ValueError):
     """Raised when field is not found in the document"""
+
+
+class PrimaryKeyCantBeExcluded(ValueError):
+    """Raised when trying to exclude primary key"""

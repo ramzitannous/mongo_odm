@@ -1,5 +1,4 @@
 import re
-from typing import Dict, Any
 
 from motor_odm.exceptions import InvalidCollectionName, InvalidFieldName
 
@@ -39,13 +38,3 @@ def validate_collection_name(collection_name: str, cls_name: str) -> None:
 def to_snake_case(s: str) -> str:
     tmp = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", s)
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", tmp).lower()
-
-
-def replace_id_field(field_dict: Dict[str, Any]) -> Dict[str, Any]:
-    for key, value in list(field_dict.items()):
-        if key == _ID:
-            field_dict[_NEW_ID] = value
-            del field_dict[_ID]
-        if isinstance(value, dict):
-            replace_id_field(value)
-    return field_dict

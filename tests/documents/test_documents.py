@@ -8,7 +8,7 @@ from pydantic import Field, ValidationError
 from tests.document import PersonDocument
 
 from motor_odm.config import configure, disconnect
-from motor_odm.documents import MongoDocument, construct_document_with_default_values
+from motor_odm.documents import MongoDocument
 from motor_odm.managers import MongoBaseManager
 
 DB_NAME = "test_db"
@@ -137,9 +137,7 @@ def test_document_construct_with_default_values():
         list_field: List[str] = Field(default_factory=list)
 
     document_dict = {"name": "Ramzi"}
-    constructed_document = construct_document_with_default_values(
-        document_dict, TestDocument
-    )
+    constructed_document = TestDocument.construct(**document_dict)
     assert constructed_document.name == "Ramzi"
     assert constructed_document.age == 10
     assert constructed_document.salary is None
@@ -147,24 +145,22 @@ def test_document_construct_with_default_values():
     assert constructed_document.id is None
 
 
-# def test_nested_document_construct_with_default_values():
-#     class ADocument(MongoDocument):
-#         name: str
-#         age: int = 10
-#         salary: Optional[float] = None
-#         list_field: List[str] = Field(default_factory=list)
-#
-#     class BDocument(MongoDocument):
-#         a: ADocument
-#         f: str
-#
-#     document_dict = {"a": {"name": "Ramzi"}}
-#     constructed_document = construct_document_with_default_values(
-#         document_dict, BDocument
-#     )
-#     assert constructed_document.a.name == "Ramzi"
-#     assert constructed_document.a.age == 10
-#     assert constructed_document.a.salary is None
-#     assert constructed_document.a.list_field == []
-#     assert constructed_document.id is None
-#     assert constructed_document.f is None
+def test_nested_document_construct_with_default_values():
+    class ADocument(MongoDocument):
+        name: str
+        age: int = 10
+        salary: Optional[float] = None
+        list_field: List[str] = Field(default_factory=list)
+
+    class BDocument(MongoDocument):
+        a: ADocument
+        f: str
+
+    document_dict = {"a": {"name": "Ramzi"}}
+    constructed_document = BDocument.construct(**document_dict)
+    assert constructed_document.a.name == "Ramzi"
+    assert constructed_document.a.age == 10
+    assert constructed_document.a.salary is None
+    assert constructed_document.a.list_field == []
+    assert constructed_document.id is None
+    assert constructed_document.f is None

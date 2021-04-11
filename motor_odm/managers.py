@@ -1,3 +1,4 @@
+import copy
 import logging
 from typing import (
     Any,
@@ -5,7 +6,6 @@ from typing import (
     Generic,
     List,
     Optional,
-    Set,
     TYPE_CHECKING,
     Type,
     TypeVar,
@@ -15,7 +15,7 @@ from typing import (
 from bson import ObjectId
 
 from motor_odm.cursor import MongoCursor
-from motor_odm.exceptions import DocumentDoestNotExists, FieldNotFoundOnDocument
+from motor_odm.exceptions import DocumentDoestNotExists, PrimaryKeyCantBeExcluded
 
 if TYPE_CHECKING:  # pragma: no cover
     from motor_odm.documents import MongoDocument  # noqa
@@ -23,6 +23,8 @@ if TYPE_CHECKING:  # pragma: no cover
 T = TypeVar("T", bound="MongoDocument")
 
 logger = logging.getLogger("manager")
+
+_ID = "_id"
 
 
 class MongoBaseManager(Generic[T]):
@@ -42,19 +44,9 @@ class MongoBaseManager(Generic[T]):
 
     if TYPE_CHECKING:  # pragma: no cover
         _document_class: Type[T]
-        _all_document_fields: Set[str]
-        _projected_fields: Set[str]
-
-    def __init__(self) -> None:
-        self._all_document_fields = set()
-        self._projected_fields = self._all_document_fields.copy()
 
     def add_to_class(self, document_class: Type[T]) -> None:
         self._document_class = document_class  # noinspection
-        self._all_document_fields = set(
-            self._document_class.__fields_without_managers__.keys()
-        )  # noinspection
-        self._projected_fields = self._all_document_fields.copy()
 
     async def bulk_create(self, objs: List[T]) -> List[T]:
         """
@@ -85,13 +77,14 @@ class MongoBaseManager(Generic[T]):
 
 
 class MongoBaseQueryManager(MongoBaseManager[T]):
-    """query class responsible for building queries"""
+    """query manager responsible for building queries"""
 
     if TYPE_CHECKING:  # pragma: no cover
         _filter: Dict[str, Any]
         _result_cache: Optional[MongoCursor]
         _limit: Optional[int] = None
         _skip: Optional[int] = None
+        _projected_fields: Optional[Dict[str, int]]
 
     def __init__(self) -> None:
         super(MongoBaseQueryManager, self).__init__()
@@ -99,14 +92,7 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         self._limit = None
         self._skip = None
         self._result_cache = None
-
-    def _check_fields_exist_in_document(self, fields: Set[str]) -> None:
-        diff_fields = fields - self._all_document_fields
-        if len(diff_fields):
-            raise FieldNotFoundOnDocument(
-                f"fields {diff_fields} are not found in the document"
-                f" of type {self._document_class.__name__}"
-            )
+        self._projected_fields = None
 
     def _clone(self) -> "MongoBaseQueryManager[T]":
         """create a new MongoBaseQueryManager quickly"""
@@ -114,9 +100,8 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         new_manager._filter = self._filter.copy()
         new_manager._limit = self._limit
         new_manager._skip = self._skip
-        new_manager._projected_fields = self._projected_fields.copy()
+        new_manager._projected_fields = copy.copy(self._projected_fields)
         new_manager._document_class = self._document_class
-        new_manager._all_document_fields = self._all_document_fields.copy()
         return new_manager
 
     def only(self, *fields: str) -> "MongoBaseQueryManager[T]":
@@ -127,8 +112,11 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         """
         fields_set = set(fields)
         new_manager = self._clone()
-        new_manager._check_fields_exist_in_document(fields_set)
-        new_manager._projected_fields = fields_set
+
+        new_manager._projected_fields = new_manager._projected_fields or {}
+        for field_name in fields_set:
+            new_manager._projected_fields[field_name] = 1
+
         return new_manager
 
     def exclude(self, *fields: str) -> "MongoBaseQueryManager[T]":
@@ -138,9 +126,13 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         :return: new query
         """
         fields_set = set(fields)
+        if _ID in fields:
+            raise PrimaryKeyCantBeExcluded('primary key "_id" cant be excluded')
         new_manager = self._clone()
-        new_manager._check_fields_exist_in_document(fields_set)
-        new_manager._projected_fields = new_manager._all_document_fields - fields_set
+        new_manager._projected_fields = new_manager._projected_fields or {}
+
+        for field_name in fields_set:
+            new_manager._projected_fields[field_name] = 0
         return new_manager
 
     def filter(self, **filter_kwargs: Any) -> "MongoBaseQueryManager[T]":
@@ -162,8 +154,7 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         async_cursor = MongoCursor(
             self._document_class,
             self._document_class.collection.delegate.find(
-                self._filter,
-                projection=list(self._projected_fields),
+                self._filter, projection=self._projected_fields
             ),
         )
         if self._skip is not None:
@@ -183,7 +174,7 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
             self._document_class,
             self._document_class.collection.delegate.find(
                 self._filter,
-                projection=list(self._projected_fields),
+                projection=self._projected_fields,
             ),
         )
         self._result_cache = async_cursor
@@ -197,19 +188,15 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         """fetch the first document that matches filter, returns None if it doesn't exist
         :return: T
         """
-        from motor_odm.documents import construct_document_with_default_values
-
         document_dict = await self._document_class.collection.find_one(
             self._filter,
-            projection=list(self._projected_fields),
+            projection=self._projected_fields,
         )
 
         if document_dict is None:
             return None
 
-        document = construct_document_with_default_values(
-            document_dict, self._document_class
-        )
+        document = self._document_class.construct(**document_dict)
         return document
 
     async def count(self) -> int:

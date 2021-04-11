@@ -4,7 +4,7 @@ import pytest
 
 from motor_odm.cursor import MongoCursor
 from motor_odm.documents import MongoDocument
-from motor_odm.exceptions import DocumentDoestNotExists, FieldNotFoundOnDocument
+from motor_odm.exceptions import DocumentDoestNotExists, PrimaryKeyCantBeExcluded
 from motor_odm.managers import MongoBaseQueryManager
 
 
@@ -18,34 +18,13 @@ def test_only_fields():
     query_manager = MongoBaseQueryManager()
     query_manager.add_to_class(QueryTest)
     query_manager = query_manager.only("name", "age")
-    assert len(query_manager._projected_fields) == 2
-
-
-def test_only_fields_that_doesnt_exists():
-    query_manager = MongoBaseQueryManager()
-    query_manager.add_to_class(QueryTest)
-
-    with pytest.raises(FieldNotFoundOnDocument):
-        query_manager = query_manager.only("sa", "test")
-
-
-def test_fields_that_doesnt_exists():
-    query_manager = MongoBaseQueryManager()
-    query_manager.add_to_class(QueryTest)
-
-    with pytest.raises(FieldNotFoundOnDocument):
-        query_manager._check_fields_exist_in_document({"hello", "test"})
+    assert len(query_manager._projected_fields.items()) == 2
 
 
 def test_all_fields_are_projected_by_default():
     query_manager = MongoBaseQueryManager()
     query_manager.add_to_class(QueryTest)
-
-    assert len(query_manager._projected_fields) == 4  # with id
-    assert "name" in query_manager._projected_fields
-    assert "age" in query_manager._projected_fields
-    assert "salary" in query_manager._projected_fields
-    assert len(query_manager._all_document_fields) == 4
+    query_manager._projected_fields is None
 
 
 def test_exclude_fields():
@@ -54,8 +33,16 @@ def test_exclude_fields():
 
     new_query_manager = query_manager.exclude("name", "age")
     assert len(new_query_manager._projected_fields) == 2
-    assert "salary" in new_query_manager._projected_fields
-    assert "id" in new_query_manager._projected_fields
+    assert new_query_manager._projected_fields["name"] == 0
+    assert new_query_manager._projected_fields["age"] == 0
+
+
+def test_id_cant_be_excluded():
+    query_manager = MongoBaseQueryManager()
+    query_manager.add_to_class(QueryTest)
+
+    with pytest.raises(PrimaryKeyCantBeExcluded):
+        query_manager.exclude("_id")
 
 
 def test_only_exclude_fields():
@@ -64,15 +51,8 @@ def test_only_exclude_fields():
     query_manager = query_manager.exclude("name", "age")
     query_manager = query_manager.only("name", "age")
     assert len(query_manager._projected_fields) == 2
-    assert "name" in query_manager._projected_fields
-    assert "age" in query_manager._projected_fields
-
-
-def test_exclude_fields_that_doesnt_exists():
-    query_manager = MongoBaseQueryManager()
-    query_manager.add_to_class(QueryTest)
-    with pytest.raises(FieldNotFoundOnDocument):
-        query_manager.exclude("sa", "test")
+    assert query_manager._projected_fields["name"] == 1
+    assert query_manager._projected_fields["age"] == 1
 
 
 def test_filter():
@@ -283,5 +263,31 @@ async def test_debug_info(event_loop):
         "age": 10,
         "skip": 2,
         "limit": 10,
-        "projection": {"list", "name", "id", "age"},
+        "projection": {"embedded": 0},
     }
+
+
+@pytest.mark.asyncio
+async def test_full_query_only(event_loop):
+    query_test = QueryTest(name="Ramzi", age=10, salary=100)
+    await query_test.save()
+
+    first = await QueryTest.objects.only("name").first()
+    assert first is not None
+    assert first.name == "Ramzi"
+    assert first.id is not None
+    assert first.age is None
+    assert first.salary is None
+
+
+@pytest.mark.asyncio
+async def test_full_query_exclude(event_loop):
+    query_test = QueryTest(name="Ramzi", age=10, salary=1000)
+    await query_test.save()
+
+    first = await QueryTest.objects.exclude("salary").first()
+    assert first is not None
+    assert first.name == "Ramzi"
+    assert first.id is not None
+    assert first.age == 10
+    assert first.salary is None

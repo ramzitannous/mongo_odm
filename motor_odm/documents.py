@@ -21,7 +21,7 @@ from pydantic.schema import default_ref_template
 from motor_odm.config import get_motor_client, get_db_name
 from motor_odm.fields import PrimaryID
 from motor_odm.registry import register
-from motor_odm.utils import replace_id_field, to_snake_case, validate_collection_name
+from motor_odm.utils import to_snake_case, validate_collection_name
 from pydantic import BaseModel, Field
 from pydantic.main import ModelMetaclass
 from pymongo.collection import Collection
@@ -316,15 +316,35 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
                 f"can't delete document with id {self.id}, because it doesn't exists"
             )
 
+    @classmethod
+    def construct(cls, _fields_set: set = None, **values: Any) -> T:
+        """construct document recursively without validation"""
+        # https://github.com/samuelcolvin/pydantic/issues/1168
 
-def construct_document_with_default_values(
-    document_dict: Dict[str, Any], document_class: Type[T]
-) -> T:
-    all_fields = document_class.__fields_without_managers__.keys()
-    document_dict_with_id = replace_id_field(document_dict)
-    new_document_fields = {}
-    for field in all_fields:
-        field_default_value = document_class.__fields__[field].get_default()
-        field_value = document_dict_with_id.get(field, field_default_value)
-        new_document_fields[field] = field_value
-    return document_class.parse_obj(new_document_fields)
+        model = cls.__new__(cls)
+        fields_values = {}
+
+        for name, field in cls.__fields_without_managers__.items():
+            key = field.alias
+            if key in values:
+                try:
+                    if field.shape == 2:
+                        fields_values[name] = [
+                            field.type_.construct(**e) for e in values[key]
+                        ]
+                    else:
+                        fields_values[name] = field.outer_type_.construct(**values[key])
+                except AttributeError:
+                    if values[key] is None and not field.required:
+                        fields_values[name] = field.get_default()
+                    else:
+                        fields_values[name] = values[key]
+            else:
+                fields_values[name] = field.get_default()
+
+        object.__setattr__(model, "__dict__", fields_values)
+        if _fields_set is None:
+            _fields_set = set(values.keys())
+        object.__setattr__(model, "__fields_set__", _fields_set)
+        model._init_private_attributes()
+        return model
