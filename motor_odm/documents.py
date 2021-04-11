@@ -104,10 +104,13 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
         collection_name, db_name = MongoDocumentBaseMetaData._get_config(meta_cls, name)
         attr["_collection_name"] = collection_name
         attr["_db_name"] = db_name
+        default_manager = MongoQueryManager()
+        attr["_objects"] = default_manager
         created_class = super().__new__(mcs, name, bases, attr)
 
         # create manager instance
-        created_class.objects = MongoQueryManager()
+        default_manager.add_to_class(created_class)
+        created_class.objects = default_manager
 
         # set some magic methods on document class
         setattr(
@@ -121,8 +124,6 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
             mcs._manager_field_names(created_class),
         )
 
-        # add class reference to managers
-        created_class.objects.add_to_class(created_class)
         register(created_class)
         for attr_name, attr_value in attr.items():
             if isinstance(attr_value, MongoBaseManager):
@@ -176,6 +177,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
         db_name: str
         db: AsyncIOMotorDatabase
         objects: MongoQueryManager[T]
+        _objects: MongoQueryManager[T]
         __fields_without_managers__: Dict[str, ModelField]
         __manager_field_names__: List[str]
 
