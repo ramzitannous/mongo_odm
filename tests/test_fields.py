@@ -29,3 +29,4 @@ def test_primary_key_schema():
     schema = {}
     PrimaryID.__modify_schema__(schema)
     assert schema["type"] == "string"
+    assert schema["title"] == "Id"

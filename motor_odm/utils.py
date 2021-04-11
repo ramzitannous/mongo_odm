@@ -2,6 +2,9 @@ import re
 
 from motor_odm.exceptions import InvalidCollectionName, InvalidFieldName
 
+_ID = "_id"
+_NEW_ID = "id"
+
 
 def validate_field_name(name: str) -> None:
     # https://docs.mongodb.com/manual/reference/limits/#Restrictions-on-Field-Names

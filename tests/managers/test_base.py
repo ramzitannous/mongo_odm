@@ -1,12 +1,12 @@
 from motor_odm.documents import MongoDocument
-from motor_odm.managers import MongoBaseManager, MongoDefaultManager
+from motor_odm.managers import MongoBaseManager, MongoQueryManager
 
 
 def test_document_has_a_default_manager():
     class T2(MongoDocument):
         pass
 
-    assert isinstance(T2.objects, MongoDefaultManager)
+    assert isinstance(T2.objects, MongoQueryManager)
 
 
 def test_document_exclude_managers_when_calling_dict():

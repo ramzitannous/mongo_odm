@@ -24,3 +24,11 @@ class AlreadyRegistered(Exception):
 
 class PrimaryKeyException(ValueError):
     """All Exceptions related to _id"""
+
+
+class FieldNotFoundOnDocument(ValueError):
+    """Raised when field is not found in the document"""
+
+
+class PrimaryKeyCantBeExcluded(ValueError):
+    """Raised when trying to exclude primary key"""
