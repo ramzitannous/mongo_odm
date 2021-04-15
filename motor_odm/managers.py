@@ -25,6 +25,7 @@ T = TypeVar("T", bound="MongoDocument")
 logger = logging.getLogger("manager")
 
 _ID = "_id"
+ID = "id"
 
 
 class MongoBaseManager(Generic[T]):
@@ -245,10 +246,10 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
         :return: MongoDocument
         """
 
-        if "id" in kwargs:  # allow to query by and the convert to _id
-            kwargs["_id"] = kwargs.pop("id")
-            if isinstance(kwargs["_id"], str):
-                kwargs["_id"] = ObjectId(kwargs["_id"])
+        if ID in kwargs:  # allow to query by and the convert to _id
+            kwargs[_ID] = kwargs.pop(ID)
+            if isinstance(kwargs[_ID], str):
+                kwargs[_ID] = ObjectId(kwargs[_ID])
 
         result = await self._document_class.collection.find_one(kwargs)
         if result is None:

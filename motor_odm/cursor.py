@@ -32,7 +32,7 @@ class MongoCursor(Generic[T], AsyncIOMotorCursor):
         dict_result = await super().next()
         return self._document_class.construct(**dict_result)
 
-    async def to_list(self, length: Optional[int]) -> List[T]:
+    async def to_list(self, length: Optional[int] = None) -> List[T]:
         dict_documents = await super().to_list(length=length)
         result = map(
             lambda obj: self._document_class.construct(**obj),

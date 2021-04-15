@@ -302,7 +302,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
         document = await self._collection.find_one({"_id": self.id})
         if document is None:
             raise DocumentDoestNotExists(
-                f"can't reload document with id {self.id}, because it doesn't exists"
+                f"cant reload document with id {self.id}," f" because it doesn't exists"
             )
         for k, v in document.items():
             if k == "_id":
@@ -330,12 +330,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
             key = field.alias
             if key in values:
                 try:
-                    if field.shape == 2:
-                        fields_values[name] = [
-                            field.type_.construct(**e) for e in values[key]
-                        ]
-                    else:
-                        fields_values[name] = field.outer_type_.construct(**values[key])
+                    fields_values[name] = field.outer_type_.construct(**values[key])
                 except AttributeError:
                     if values[key] is None and not field.required:
                         fields_values[name] = field.get_default()

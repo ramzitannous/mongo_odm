@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 import pytest
 from bson import ObjectId
 from pydantic import Field, ValidationError
-
 from tests.document import PersonDocument
 
 from motor_odm.config import configure, disconnect
@@ -149,14 +148,14 @@ def test_nested_document_construct_with_default_values():
     class ADocument(MongoDocument):
         name: str
         age: int = 10
-        salary: Optional[float] = None
+        salary: Optional[float]
         list_field: List[str] = Field(default_factory=list)
 
     class BDocument(MongoDocument):
         a: ADocument
         f: str
 
-    document_dict = {"a": {"name": "Ramzi"}}
+    document_dict = {"a": {"name": "Ramzi", "salary": None}}
     constructed_document = BDocument.construct(**document_dict)
     assert constructed_document.a.name == "Ramzi"
     assert constructed_document.a.age == 10
