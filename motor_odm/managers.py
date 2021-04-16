@@ -29,12 +29,12 @@ ID = "id"
 
 
 class MongoBaseManager(Generic[T]):
-    """Base Manager that all type of managers should inherits
+    """Base Manager that all type of managers should inherit
     to create a new manager:
 
     managers.py
 
-    class CustomManager(MongoBaseManager):
+    class CustomManager(MongoBaseManager["CustomManager]):
         pass
 
     documents.py
@@ -69,7 +69,7 @@ class MongoBaseManager(Generic[T]):
         """delete many objects using ids
 
         :type ids: id of objects to delete
-        :returns int number of deleted objects
+        :returns int, number of deleted objects
         """
 
         delete_filter = {"_id": {"$in": ids}}
