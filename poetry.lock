@@ -342,7 +342,7 @@ mkdocs-material = ">=5.0.0"
 
 [[package]]
 name = "motor"
-version = "2.4.0"
+version = "2.3.1"
 description = "Non-blocking MongoDB driver for Tornado or asyncio"
 category = "main"
 optional = false
@@ -350,9 +350,6 @@ python-versions = ">=3.5.2"
 
 [package.dependencies]
 pymongo = ">=3.11,<4"
-
-[package.extras]
-encryption = ["pymongo[encryption] (>=3.11,<4)"]
 
 [[package]]
 name = "mypy"
@@ -698,8 +695,8 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.6.1"
-content-hash = "653f0db0791e2f7387c3fd3caea0d01aad1aa57170c585fb00a6d8d567e26a74"
+python-versions = ">=3.6.1,<4.0"
+content-hash = "677ca52a085d8d0a6dad7c42b87e94c1e031df201ba179f1b1912aa6a89f4ba5"
 
 [metadata.files]
 appdirs = [
@@ -899,8 +896,8 @@ mkdocs-material-extensions = [
     {file = "mkdocs_material_extensions-1.0.1-py3-none-any.whl", hash = "sha256:d90c807a88348aa6d1805657ec5c0b2d8d609c110e62b9dce4daf7fa981fa338"},
 ]
 motor = [
-    {file = "motor-2.4.0-py3-none-any.whl", hash = "sha256:839c11a43897dbec8e5ba0e87a9c9b877239803126877b2efa5cef89aa6b687a"},
-    {file = "motor-2.4.0.tar.gz", hash = "sha256:1196db507142ef8f00d953efa2f37b39335ef2d72af6ce4fbccfd870b65c5e9f"},
+    {file = "motor-2.3.1-py3-none-any.whl", hash = "sha256:ea5a8f5c7cbb08b7c301d7c66746fc96333d634182df236dff0f814f802fe232"},
+    {file = "motor-2.3.1.tar.gz", hash = "sha256:319df35ef9d4099dc125b7d46b552fa88578675e0b06cab94624c666bb0a8a90"},
 ]
 mypy = [
     {file = "mypy-0.812-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:a26f8ec704e5a7423c8824d425086705e381b4f1dfdef6e3a1edab7ba174ec49"},
