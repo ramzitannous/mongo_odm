@@ -31,7 +31,7 @@ from motor_odm.managers import MongoBaseManager, MongoQueryManager
 if TYPE_CHECKING:  # pragma: no cover
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, DictStrAny
 
-T = TypeVar("T", bound="MongoDocument")
+T = TypeVar("T", bound="MongoDocument", covariant=True)
 
 
 class MongoDocumentBaseMetaData(ModelMetaclass):

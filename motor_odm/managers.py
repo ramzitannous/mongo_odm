@@ -20,7 +20,7 @@ from motor_odm.exceptions import DocumentDoestNotExists, PrimaryKeyCantBeExclude
 if TYPE_CHECKING:  # pragma: no cover
     from motor_odm.documents import MongoDocument  # noqa
 
-T = TypeVar("T", bound="MongoDocument")
+T = TypeVar("T", bound="MongoDocument", covariant=True)
 
 logger = logging.getLogger("manager")
 
