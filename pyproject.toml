@@ -24,6 +24,8 @@ mkdocs = "^1.1"
 mkdocs-material = "^7.1.1"
 markdown-include = "^0.6.0"
 pytest-asyncio = "^0.14.0"
+Sphinx = "^3.5.4"
+sphinx-rtd-theme = "^0.5.2"
 
 
 [build-system]
