@@ -1,4 +1,4 @@
-from typing import Generic, List, Optional, TypeVar
+from typing import Generic, List, Optional, TypeVar, AsyncIterable
 
 from typing import Type, TYPE_CHECKING
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:  # pragma: no cover
 T = TypeVar("T", bound="MongoDocument")
 
 
-class MongoCursor(Generic[T], AsyncIOMotorCursor):
+class MongoCursor(AsyncIOMotorCursor, Generic[T], AsyncIterable[T]):
 
     if TYPE_CHECKING:  # pragma: no cover
         _document_class: Type[T]
