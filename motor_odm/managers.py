@@ -251,7 +251,10 @@ class MongoBaseQueryManager(MongoBaseManager[T]):
             if isinstance(kwargs[_ID], str):
                 kwargs[_ID] = ObjectId(kwargs[_ID])
 
-        result = await self._document_class.collection.find_one(kwargs)
+        result = await self._document_class.collection.find_one(
+            kwargs,
+            projection=self._projected_fields,
+        )
         if result is None:
             raise DocumentDoestNotExists(f"Document with {kwargs} doesnt exists")
         return self._document_class(**result)
