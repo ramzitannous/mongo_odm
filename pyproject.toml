@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "motor_odm"
+name = "motorodm"
 version = "1.0.0"
 description = "Python async mongodb ODM using motor and pydantic"
 authors = ["Ramzi Tannous <ramzi271996@gmail.com>"]

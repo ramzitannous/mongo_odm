@@ -2,7 +2,7 @@
  document and their managers"""
 from typing import Dict
 
-from motor_odm.exceptions import AlreadyRegistered
+from motorodm.exceptions import AlreadyRegistered
 
 DOCUMENTS_REGISTRY: Dict[str, type] = {}
 
@@ -10,7 +10,7 @@ DOCUMENTS_REGISTRY: Dict[str, type] = {}
 def register(document_cls: type) -> None:
     """register a document class, for internal use"""
 
-    from motor_odm.documents import MongoDocumentBaseMetaData
+    from motorodm.documents import MongoDocumentBaseMetaData
 
     if not isinstance(document_cls, MongoDocumentBaseMetaData):
         raise TypeError(

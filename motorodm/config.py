@@ -1,7 +1,7 @@
 from typing import Optional
 
 from motor.motor_asyncio import AsyncIOMotorClient
-from motor_odm.exceptions import ImproperlyConfigured
+from motorodm.exceptions import ImproperlyConfigured
 
 _motor_client: Optional[AsyncIOMotorClient] = None
 _db_name: Optional[str] = None

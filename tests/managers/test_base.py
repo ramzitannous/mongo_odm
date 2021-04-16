@@ -1,5 +1,5 @@
-from motor_odm.documents import MongoDocument
-from motor_odm.managers import MongoBaseManager, MongoQueryManager
+from motorodm.documents import MongoDocument
+from motorodm.managers import MongoBaseManager, MongoQueryManager
 
 
 def test_document_has_a_default_manager():
