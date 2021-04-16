@@ -5,7 +5,7 @@ from tests.document import PersonDocument
 from motor_odm.cursor import MongoCursor
 
 
-async def setup(count=1):
+async def setup_data(count=1):
     objs = []
     for i in range(count):
         objs.append(PersonDocument(age=10, name=f"test_{i}"))
@@ -15,7 +15,7 @@ async def setup(count=1):
 
 @pytest.mark.asyncio
 async def test_cursor_next(event_loop):
-    await setup()
+    await setup_data()
     cursor = MongoCursor(
         PersonDocument,
         PersonDocument.collection.delegate.find(
@@ -30,7 +30,7 @@ async def test_cursor_next(event_loop):
 
 @pytest.mark.asyncio
 async def test_cursor_to_list(event_loop):
-    await setup()
+    await setup_data()
     cursor = MongoCursor(
         PersonDocument,
         PersonDocument.collection.delegate.find(

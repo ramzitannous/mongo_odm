@@ -9,6 +9,14 @@ def test_document_has_a_default_manager():
     assert isinstance(T2.objects, MongoQueryManager)
 
 
+def test_document_instance_has_an_internal_manager():
+    class TestWithInternalManager(MongoDocument):
+        pass
+
+    t = TestWithInternalManager()
+    assert isinstance(t._objects, MongoQueryManager)
+
+
 def test_document_exclude_managers_when_calling_dict():
     class CustomManager(MongoBaseManager):
         pass

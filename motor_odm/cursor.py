@@ -1,4 +1,4 @@
-from typing import Generic, List, Optional, TypeVar
+from typing import Generic, List, Optional, TypeVar, AsyncIterable
 
 from typing import Type, TYPE_CHECKING
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:  # pragma: no cover
 T = TypeVar("T", bound="MongoDocument")
 
 
-class MongoCursor(Generic[T], AsyncIOMotorCursor):
+class MongoCursor(AsyncIOMotorCursor, Generic[T], AsyncIterable[T]):
 
     if TYPE_CHECKING:  # pragma: no cover
         _document_class: Type[T]
@@ -32,7 +32,7 @@ class MongoCursor(Generic[T], AsyncIOMotorCursor):
         dict_result = await super().next()
         return self._document_class.construct(**dict_result)
 
-    async def to_list(self, length: Optional[int]) -> List[T]:
+    async def to_list(self, length: Optional[int] = None) -> List[T]:
         dict_documents = await super().to_list(length=length)
         result = map(
             lambda obj: self._document_class.construct(**obj),

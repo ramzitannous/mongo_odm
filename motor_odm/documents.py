@@ -14,7 +14,7 @@ from typing import (
 )
 
 from bson import ObjectId
-from motor.motor_asyncio import AsyncIOMotorDatabase
+from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase
 from pydantic.fields import ModelField
 from pydantic.schema import default_ref_template
 
@@ -24,7 +24,7 @@ from motor_odm.registry import register
 from motor_odm.utils import to_snake_case, validate_collection_name
 from pydantic import BaseModel, Field
 from pydantic.main import ModelMetaclass
-from pymongo.collection import Collection
+from pymongo.collection import IndexModel
 from motor_odm.exceptions import DocumentDoestNotExists
 from motor_odm.managers import MongoBaseManager, MongoQueryManager
 
@@ -43,10 +43,12 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
 
     @property
     def collection_name(self) -> str:
+        """collection name"""
         return self._collection_name
 
     @property
     def db_name(self) -> str:
+        """db name"""
         return self._db_name
 
     @property
@@ -55,7 +57,7 @@ class MongoDocumentBaseMetaData(ModelMetaclass):
         return get_motor_client()[self._db_name]
 
     @property
-    def collection(self) -> Collection:
+    def collection(self) -> AsyncIOMotorCollection:
         """returns a reference of the used collection in the db"""
         return get_motor_client()[self._db_name][self._collection_name]
 
@@ -172,7 +174,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
 
     # added by metaclass
     if TYPE_CHECKING:  # pragma: no cover
-        collection: Collection
+        collection: AsyncIOMotorCollection
         collection_name: str
         db_name: str
         db: AsyncIOMotorDatabase
@@ -202,6 +204,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
     def schema(
         cls, by_alias: bool = False, ref_template: str = default_ref_template
     ) -> "DictStrAny":
+        """schema of the document"""
         return super().schema(by_alias, ref_template)
 
     @classmethod
@@ -216,8 +219,25 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
             by_alias=by_alias, ref_template=ref_template, **dumps_kwargs
         )
 
+    @classmethod
+    async def drop_collection(cls) -> None:
+        """drop the current collection"""
+        await cls.collection.drop()
+
+    @classmethod
+    async def create_indexes(
+        cls, indexes: List[IndexModel], **kwargs: Dict[str, Any]
+    ) -> None:
+        """create indexes for the current collection, using pymongo.collection"""
+        await cls.collection.create_indexes(indexes, **kwargs)  # pragma: no cover
+
+    @classmethod
+    async def drop_indexes(cls, **kwargs: Dict[str, Any]) -> None:
+        """drop all indexes of the currenct collection"""
+        await cls.collection.drop_indexes(**kwargs)  # pragma: no cover
+
     @property
-    def _collection(self) -> Collection:
+    def _collection(self) -> AsyncIOMotorCollection:
         return self.__class__.collection
 
     def dict(
@@ -231,6 +251,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> "DictStrAny":
+        """dict representation of the document"""
 
         if exclude is not None:
             new_excluded_fields = {*self.__manager_field_names__, *exclude}
@@ -259,6 +280,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
         encoder: Optional[Callable[[Any], Any]] = None,
         **dumps_kwargs: Any,
     ) -> str:
+        """json representation of the document"""
         if exclude is not None:
             new_excluded_fields = {*self.__manager_field_names__, *exclude}
         else:
@@ -302,7 +324,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
         document = await self._collection.find_one({"_id": self.id})
         if document is None:
             raise DocumentDoestNotExists(
-                f"can't reload document with id {self.id}, because it doesn't exists"
+                f"cant reload document with id {self.id}," f" because it doesn't exists"
             )
         for k, v in document.items():
             if k == "_id":
@@ -330,12 +352,7 @@ class MongoDocument(Generic[T], BaseModel, metaclass=MongoDocumentBaseMetaData):
             key = field.alias
             if key in values:
                 try:
-                    if field.shape == 2:
-                        fields_values[name] = [
-                            field.type_.construct(**e) for e in values[key]
-                        ]
-                    else:
-                        fields_values[name] = field.outer_type_.construct(**values[key])
+                    fields_values[name] = field.outer_type_.construct(**values[key])
                 except AttributeError:
                     if values[key] is None and not field.required:
                         fields_values[name] = field.get_default()

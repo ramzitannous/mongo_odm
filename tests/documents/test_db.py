@@ -72,3 +72,13 @@ async def test_validate_saving(event_loop):
     p = PersonDocument(name=10, age="10")
     p.age = False
     await p.save()
+
+
+@pytest.mark.asyncio
+async def test_drop_collection(event_loop):
+    p = PersonDocument(name="r", age=10)
+    p.age = False
+    await p.save()
+    await PersonDocument.drop_collection()
+    collections = await PersonDocument.db.list_collection_names()
+    assert not len(collections)
