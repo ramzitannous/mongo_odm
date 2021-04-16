@@ -2,7 +2,7 @@ from typing import Callable, Generator
 
 from bson import ObjectId
 from bson.errors import InvalidId
-from motor_odm.exceptions import InvalidFieldType
+from motorodm.exceptions import InvalidFieldType
 
 
 class PrimaryID(str):

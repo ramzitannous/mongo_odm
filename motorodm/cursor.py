@@ -7,7 +7,7 @@ from pymongo.cursor import Cursor
 
 
 if TYPE_CHECKING:  # pragma: no cover
-    from motor_odm.documents import MongoDocument  # noqa
+    from motorodm.documents import MongoDocument  # noqa
 
 T = TypeVar("T", bound="MongoDocument")
 

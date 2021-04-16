@@ -1,4 +1,4 @@
-from motor_odm.documents import MongoDocument
+from motorodm.documents import MongoDocument
 
 ID = "5349b4ddd2781d08c09890f3"
 

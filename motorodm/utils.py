@@ -1,6 +1,6 @@
 import re
 
-from motor_odm.exceptions import InvalidCollectionName, InvalidFieldName
+from motorodm.exceptions import InvalidCollectionName, InvalidFieldName
 
 _ID = "_id"
 _NEW_ID = "id"

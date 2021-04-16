@@ -45,5 +45,5 @@ deploy-docs:
 
 install: ## uninstall and install package with python
 install:
-	poetry remove ./motor_odm
-	poetry add ./motor_odm
+	poetry remove ./motorodm
+	poetry add ./motorodm

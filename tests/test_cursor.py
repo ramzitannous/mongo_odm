@@ -2,7 +2,7 @@ import pytest
 
 from tests.document import PersonDocument
 
-from motor_odm.cursor import MongoCursor
+from motorodm.cursor import MongoCursor
 
 
 async def setup_data(count=1):
