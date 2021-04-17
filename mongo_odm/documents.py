@@ -18,15 +18,15 @@ from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorDatabase
 from pydantic.fields import ModelField
 from pydantic.schema import default_ref_template
 
-from motorodm.config import get_motor_client, get_db_name
-from motorodm.fields import PrimaryID
-from motorodm.registry import register
-from motorodm.utils import to_snake_case, validate_collection_name
+from mongo_odm.config import get_motor_client, get_db_name
+from mongo_odm.fields import PrimaryID
+from mongo_odm.registry import register
+from mongo_odm.utils import to_snake_case, validate_collection_name
 from pydantic import BaseModel, Field
 from pydantic.main import ModelMetaclass
 from pymongo.collection import IndexModel
-from motorodm.exceptions import DocumentDoestNotExists
-from motorodm.managers import MongoBaseManager, MongoQueryManager
+from mongo_odm.exceptions import DocumentDoestNotExists
+from mongo_odm.managers import MongoBaseManager, MongoQueryManager
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, DictStrAny

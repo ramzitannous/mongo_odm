@@ -2,10 +2,10 @@ from typing import List
 
 import pytest
 
-from motorodm.cursor import MongoCursor
-from motorodm.documents import MongoDocument
-from motorodm.exceptions import DocumentDoestNotExists, PrimaryKeyCantBeExcluded
-from motorodm.managers import MongoBaseQueryManager
+from mongo_odm.cursor import MongoCursor
+from mongo_odm.documents import MongoDocument
+from mongo_odm.exceptions import DocumentDoestNotExists, PrimaryKeyCantBeExcluded
+from mongo_odm.managers import MongoBaseQueryManager
 
 
 class QueryTest(MongoDocument):

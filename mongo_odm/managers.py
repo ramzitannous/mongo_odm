@@ -14,11 +14,11 @@ from typing import (
 
 from bson import ObjectId
 
-from motorodm.cursor import MongoCursor
-from motorodm.exceptions import DocumentDoestNotExists, PrimaryKeyCantBeExcluded
+from mongo_odm.cursor import MongoCursor
+from mongo_odm.exceptions import DocumentDoestNotExists, PrimaryKeyCantBeExcluded
 
 if TYPE_CHECKING:  # pragma: no cover
-    from motorodm.documents import MongoDocument  # noqa
+    from mongo_odm.documents import MongoDocument  # noqa
 
 T = TypeVar("T", bound="MongoDocument")
 

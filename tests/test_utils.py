@@ -1,7 +1,7 @@
 import pytest
 
-import motorodm.utils as utils
-from motorodm.exceptions import InvalidCollectionName, InvalidFieldName
+import mongo_odm.utils as utils
+from mongo_odm.exceptions import InvalidCollectionName, InvalidFieldName
 
 
 @pytest.mark.parametrize("name", ("$test", "tes$t", "", "system.test"))

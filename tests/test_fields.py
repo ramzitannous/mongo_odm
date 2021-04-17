@@ -2,7 +2,7 @@ import pytest
 from bson import ObjectId
 from pydantic import BaseModel
 
-from motorodm.fields import PrimaryID
+from mongo_odm.fields import PrimaryID
 
 
 def test_primary_key_field_serialization():

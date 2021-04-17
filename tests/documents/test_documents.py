@@ -7,9 +7,9 @@ from pydantic import Field, ValidationError
 
 from tests.document import PersonDocument
 
-from motorodm.config import configure, disconnect
-from motorodm.documents import MongoDocument
-from motorodm.managers import MongoBaseManager
+from mongo_odm.config import configure, disconnect
+from mongo_odm.documents import MongoDocument
+from mongo_odm.managers import MongoBaseManager
 
 DB_NAME = "test_db"
 COLLECTION_NAME = "test_document"

@@ -1,6 +1,6 @@
 import pytest
 
-from motorodm.documents import MongoDocument
+from mongo_odm.documents import MongoDocument
 
 
 @pytest.mark.asyncio

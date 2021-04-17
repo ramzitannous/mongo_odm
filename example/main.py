@@ -1,9 +1,9 @@
 import asyncio
 
-from motorodm.config import configure
+from mongo_odm.config import configure
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from motorodm.documents import MongoDocument
+from mongo_odm.documents import MongoDocument
 
 DB_NAME = "example_db"
 

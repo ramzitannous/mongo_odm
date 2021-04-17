@@ -1,6 +1,6 @@
 import re
 
-from motorodm.exceptions import InvalidCollectionName, InvalidFieldName
+from mongo_odm.exceptions import InvalidCollectionName, InvalidFieldName
 
 _ID = "_id"
 _NEW_ID = "id"

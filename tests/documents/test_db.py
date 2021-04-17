@@ -3,7 +3,7 @@ from bson import ObjectId
 
 from tests.document import PersonDocument
 
-from motorodm.exceptions import DocumentDoestNotExists
+from mongo_odm.exceptions import DocumentDoestNotExists
 
 ID = "5349b4ddd2781d08c09890f3"
 

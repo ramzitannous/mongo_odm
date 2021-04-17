@@ -1,11 +1,11 @@
 import pytest
 
-from motorodm.exceptions import AlreadyRegistered
-from motorodm.registry import DOCUMENTS_REGISTRY, clear_registry, register, unregister
+from mongo_odm.exceptions import AlreadyRegistered
+from mongo_odm.registry import DOCUMENTS_REGISTRY, clear_registry, register, unregister
 
 
 def _setup():
-    from motorodm.documents import MongoDocument
+    from mongo_odm.documents import MongoDocument
 
     class TestRegisterADocument(MongoDocument):
         pass

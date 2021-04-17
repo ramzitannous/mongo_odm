@@ -2,8 +2,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-import motorodm.config as config
-from motorodm.config import (
+import mongo_odm.config as config
+from mongo_odm.config import (
     ImproperlyConfigured,
     configure,
     disconnect,
