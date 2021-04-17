@@ -2,7 +2,6 @@
  document and their managers"""
 from typing import Dict
 
-from mongo_odm.exceptions import AlreadyRegistered
 
 DOCUMENTS_REGISTRY: Dict[str, type] = {}
 
@@ -20,7 +19,7 @@ def register(document_cls: type) -> None:
 
     key = document_cls.__name__
     if key in DOCUMENTS_REGISTRY:
-        raise AlreadyRegistered(f"{document_cls} is already registered")
+        return
 
     DOCUMENTS_REGISTRY[key] = document_cls
 

@@ -18,10 +18,6 @@ class DocumentDoestNotExists(Exception):
     """Exception happens when document doesnt exist in the db"""
 
 
-class AlreadyRegistered(Exception):
-    """Exception for registry"""
-
-
 class PrimaryKeyException(ValueError):
     """All Exceptions related to _id"""
 
