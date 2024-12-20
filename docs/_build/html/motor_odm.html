@@ -1,0 +1,811 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>motor_odm package &mdash; motor_odm 1.0.0.beta documentation</title>
+
+
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+
+
+
+
+
+
+
+
+
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+
+
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+</head>
+
+<body class="wy-body-for-nav">
+
+
+  <div class="wy-grid-for-nav">
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+            <a href="index.html" class="icon icon-home"> motor_odm
+
+
+
+          </a>
+
+
+
+
+
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+        </div>
+
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+
+
+
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">motor_odm package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-motor_odm.config">motor_odm.config module</a></li>
+<li><a class="reference internal" href="#module-motor_odm.cursor">motor_odm.cursor module</a></li>
+<li><a class="reference internal" href="#module-motor_odm.documents">motor_odm.documents module</a></li>
+<li><a class="reference internal" href="#module-motor_odm.exceptions">motor_odm.exceptions module</a></li>
+<li><a class="reference internal" href="#module-motor_odm.fields">motor_odm.fields module</a></li>
+<li><a class="reference internal" href="#module-motor_odm.managers">motor_odm.managers module</a></li>
+<li><a class="reference internal" href="#module-motor_odm.registry">motor_odm.registry module</a></li>
+<li><a class="reference internal" href="#module-motor_odm.utils">motor_odm.utils module</a></li>
+<li><a class="reference internal" href="#module-motor_odm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+        </div>
+
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" aria-label="top navigation">
+
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">motor_odm</a>
+
+      </nav>
+
+
+      <div class="wy-nav-content">
+
+        <div class="rst-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+
+      <li>motor_odm package</li>
+
+
+      <li class="wy-breadcrumbs-aside">
+
+
+            <a href="_sources/motor_odm.rst.txt" rel="nofollow"> View page source</a>
+
+
+      </li>
+
+  </ul>
+
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <div class="section" id="motor-odm-package">
+<h1>motor_odm package<a class="headerlink" href="#motor-odm-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-motor_odm.config">
+<span id="motor-odm-config-module"></span><h2>motor_odm.config module<a class="headerlink" href="#module-motor_odm.config" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="motor_odm.config.configure">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.config.</span></code><code class="sig-name descname"><span class="pre">configure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor_client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">motor.motor_asyncio.AsyncIOMotorClient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.config.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the used Motor client and database name,
+should be called before any database connection and early as possible
+especially before any document declaration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor_client</strong> – Instance of configured motor driver</p></li>
+<li><p><strong>db_name</strong> – The name of the database used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="motor_odm.config.disconnect">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.config.</span></code><code class="sig-name descname"><span class="pre">disconnect</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.config.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnects database connection, should be called when webserver tears down</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="motor_odm.config.get_db_name">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.config.</span></code><code class="sig-name descname"><span class="pre">get_db_name</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#motor_odm.config.get_db_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get database used for connections</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="motor_odm.config.get_motor_client">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.config.</span></code><code class="sig-name descname"><span class="pre">get_motor_client</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">motor.motor_asyncio.AsyncIOMotorClient</span><a class="headerlink" href="#motor_odm.config.get_motor_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the used Motor client</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-motor_odm.cursor">
+<span id="motor-odm-cursor-module"></span><h2>motor_odm.cursor module<a class="headerlink" href="#module-motor_odm.cursor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="motor_odm.cursor.MongoCursor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.cursor.</span></code><code class="sig-name descname"><span class="pre">MongoCursor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_class</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pymongo.cursor.Cursor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motor_odm.cursor.MongoCursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">motor.motor_asyncio.AsyncIOMotorCursor</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">motor_odm.cursor.T</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">motor_odm.cursor.T</span></code>]</p>
+<dl class="py method">
+<dt id="motor_odm.cursor.MongoCursor.next">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">next</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">T</span><a class="headerlink" href="#motor_odm.cursor.MongoCursor.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Advance the cursor.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.cursor.MongoCursor.to_list">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">to_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.cursor.MongoCursor.to_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of documents.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><cite>length</cite>: maximum number of documents to return for this call, or
+None</p></li>
+</ul>
+<p>Returns a Future.</p>
+</dd>
+</dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 2.0: </span>No longer accepts a callback argument.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.2: </span><cite>callback</cite> must be passed as a keyword argument, like
+<code class="docutils literal notranslate"><span class="pre">to_list(10,</span> <span class="pre">callback=callback)</span></code>, and the
+<cite>length</cite> parameter is no longer optional.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-motor_odm.documents">
+<span id="motor-odm-documents-module"></span><h2>motor_odm.documents module<a class="headerlink" href="#module-motor_odm.documents" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="motor_odm.documents.MongoDocument">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.documents.</span></code><code class="sig-name descname"><span class="pre">MongoDocument</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#motor_odm.fields.PrimaryID" title="motor_odm.fields.PrimaryID"><span class="pre">motor_odm.fields.PrimaryID</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motor_odm.documents.MongoDocument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">motor_odm.documents.T</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">pydantic.main.BaseModel</span></code></p>
+<p>Base Mongodb document class that other documents should inherit to use common functionality,
+represents a document in mongodb collection
+primary id of type fields.PrimaryID is automatically generated</p>
+<p>eg. without Meta class:</p>
+<dl>
+<dt>class PersonDocument(MongoDocument):</dt><dd><p>age: int</p>
+<p>name: str</p>
+</dd>
+</dl>
+<p>with Meta class to override configuration:</p>
+<dl>
+<dt>class PersonDocument(MongoDocument):</dt><dd><p>age: int</p>
+<p>name: str</p>
+<dl>
+<dt>class Meta:</dt><dd><p>collection_name = ‘person’</p>
+<p>db_name = ‘people_db’</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="motor_odm.documents.MongoDocument.Config">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Config</span></code><a class="headerlink" href="#motor_odm.documents.MongoDocument.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocument.Config.allow_population_by_field_name">
+<code class="sig-name descname"><span class="pre">allow_population_by_field_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocument.Config.allow_population_by_field_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocument.Config.arbitrary_types_allowed">
+<code class="sig-name descname"><span class="pre">arbitrary_types_allowed</span></code><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocument.Config.arbitrary_types_allowed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocument.Config.json_encoders">
+<code class="sig-name descname"><span class="pre">json_encoders</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{&lt;class</span> <span class="pre">'bson.objectid.ObjectId'&gt;:</span> <span class="pre">&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'motor_odm.fields.PrimaryID'&gt;:</span> <span class="pre">&lt;class</span> <span class="pre">'str'&gt;}</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocument.Config.json_encoders" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocument.Config.orm_mode">
+<code class="sig-name descname"><span class="pre">orm_mode</span></code><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocument.Config.orm_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocument.Config.validate_assignment">
+<code class="sig-name descname"><span class="pre">validate_assignment</span></code><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocument.Config.validate_assignment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="motor_odm.documents.MongoDocument.Meta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">Meta</span></code><a class="headerlink" href="#motor_odm.documents.MongoDocument.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocument.Meta.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocument.Meta.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocument.Meta.db_name">
+<code class="sig-name descname"><span class="pre">db_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocument.Meta.db_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.construct">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">construct</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_fields_set</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">set</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">T</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.construct" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct document recursively without validation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.create_indexes">
+<em class="property"><span class="pre">async</span> <span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">create_indexes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexes</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">pymongo.operations.IndexModel</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.create_indexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>create indexes for the current collection, using pymongo.collection</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.delete">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">delete</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete a document from db</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.dict">
+<code class="sig-name descname"><span class="pre">dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">AbstractSetIntStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">MappingIntStrAny</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">AbstractSetIntStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">MappingIntStrAny</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_alias</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_defaults</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_unset</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_defaults</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_none</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">DictStrAny</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict representation of the document</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.drop_collection">
+<em class="property"><span class="pre">async</span> <span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">drop_collection</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.drop_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>drop the current collection</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.drop_indexes">
+<em class="property"><span class="pre">async</span> <span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">drop_indexes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.drop_indexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>drop all indexes of the currenct collection</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocument.id">
+<code class="sig-name descname"><span class="pre">id</span></code><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#motor_odm.fields.PrimaryID" title="motor_odm.fields.PrimaryID"><span class="pre">motor_odm.fields.PrimaryID</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#motor_odm.documents.MongoDocument.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.json">
+<code class="sig-name descname"><span class="pre">json</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">AbstractSetIntStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">MappingIntStrAny</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">AbstractSetIntStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">MappingIntStrAny</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_alias</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_defaults</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_unset</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_defaults</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_none</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dumps_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>json representation of the document</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.reload">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">reload</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.reload" title="Permalink to this definition">¶</a></dt>
+<dd><p>reload document from db</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.save">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">save</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">excluded_fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>save a single document to collection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>excluded_fields</strong> – field names to exclude</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.schema">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">schema</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by_alias</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_template</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'#/definitions/{model}'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">DictStrAny</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>schema of the document</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocument.schema_json">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">schema_json</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_alias</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_template</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'#/definitions/{model}'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dumps_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#motor_odm.documents.MongoDocument.schema_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="motor_odm.documents.MongoDocumentBaseMetaData">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.documents.</span></code><code class="sig-name descname"><span class="pre">MongoDocumentBaseMetaData</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motor_odm.documents.MongoDocumentBaseMetaData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pydantic.main.ModelMetaclass</span></code></p>
+<p>Document MetaClass that configures common behaviour for MongoDocument</p>
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocumentBaseMetaData.collection">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">collection</span></code><a class="headerlink" href="#motor_odm.documents.MongoDocumentBaseMetaData.collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a reference of the used collection in the db</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocumentBaseMetaData.collection_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">collection_name</span></code><a class="headerlink" href="#motor_odm.documents.MongoDocumentBaseMetaData.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>collection name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocumentBaseMetaData.db">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">db</span></code><a class="headerlink" href="#motor_odm.documents.MongoDocumentBaseMetaData.db" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a reference of the used database</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.documents.MongoDocumentBaseMetaData.db_name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">db_name</span></code><a class="headerlink" href="#motor_odm.documents.MongoDocumentBaseMetaData.db_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>db name</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="motor_odm.documents.MongoDocumentMeta">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.documents.</span></code><code class="sig-name descname"><span class="pre">MongoDocumentMeta</span></code><a class="headerlink" href="#motor_odm.documents.MongoDocumentMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Document Meta that specify or override document default behaviour</p>
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocumentMeta.collection_name">
+<code class="sig-name descname"><span class="pre">collection_name</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocumentMeta.collection_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>overrides db_name from configuration</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="motor_odm.documents.MongoDocumentMeta.db_name">
+<code class="sig-name descname"><span class="pre">db_name</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#motor_odm.documents.MongoDocumentMeta.db_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-motor_odm.exceptions">
+<span id="motor-odm-exceptions-module"></span><h2>motor_odm.exceptions module<a class="headerlink" href="#module-motor_odm.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="py exception">
+<dt id="motor_odm.exceptions.AlreadyRegistered">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">AlreadyRegistered</span></code><a class="headerlink" href="#motor_odm.exceptions.AlreadyRegistered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception for registry</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="motor_odm.exceptions.DocumentDoestNotExists">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">DocumentDoestNotExists</span></code><a class="headerlink" href="#motor_odm.exceptions.DocumentDoestNotExists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception happens when document doesnt exist in the db</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="motor_odm.exceptions.FieldNotFoundOnDocument">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">FieldNotFoundOnDocument</span></code><a class="headerlink" href="#motor_odm.exceptions.FieldNotFoundOnDocument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Raised when field is not found in the document</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="motor_odm.exceptions.ImproperlyConfigured">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">ImproperlyConfigured</span></code><a class="headerlink" href="#motor_odm.exceptions.ImproperlyConfigured" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Exception for wrong configuration</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="motor_odm.exceptions.InvalidCollectionName">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">InvalidCollectionName</span></code><a class="headerlink" href="#motor_odm.exceptions.InvalidCollectionName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Exception for invalid collection name eg. $person</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="motor_odm.exceptions.InvalidFieldName">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">InvalidFieldName</span></code><a class="headerlink" href="#motor_odm.exceptions.InvalidFieldName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Exception for invalid field names eg. $hello</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="motor_odm.exceptions.InvalidFieldType">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">InvalidFieldType</span></code><a class="headerlink" href="#motor_odm.exceptions.InvalidFieldType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeError</span></code></p>
+<p>Exception for invalid fields</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="motor_odm.exceptions.PrimaryKeyCantBeExcluded">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">PrimaryKeyCantBeExcluded</span></code><a class="headerlink" href="#motor_odm.exceptions.PrimaryKeyCantBeExcluded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Raised when trying to exclude primary key</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="motor_odm.exceptions.PrimaryKeyException">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.exceptions.</span></code><code class="sig-name descname"><span class="pre">PrimaryKeyException</span></code><a class="headerlink" href="#motor_odm.exceptions.PrimaryKeyException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>All Exceptions related to _id</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-motor_odm.fields">
+<span id="motor-odm-fields-module"></span><h2>motor_odm.fields module<a class="headerlink" href="#module-motor_odm.fields" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="motor_odm.fields.PrimaryID">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.fields.</span></code><code class="sig-name descname"><span class="pre">PrimaryID</span></code><a class="headerlink" href="#motor_odm.fields.PrimaryID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<p>represent mongodb _id field of type bson.ObjectID, with enhanced schema</p>
+<dl class="py method">
+<dt id="motor_odm.fields.PrimaryID.validate">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bson.objectid.ObjectId</span><a class="headerlink" href="#motor_odm.fields.PrimaryID.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-motor_odm.managers">
+<span id="motor-odm-managers-module"></span><h2>motor_odm.managers module<a class="headerlink" href="#module-motor_odm.managers" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="motor_odm.managers.MongoBaseManager">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.managers.</span></code><code class="sig-name descname"><span class="pre">MongoBaseManager</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motor_odm.managers.MongoBaseManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">motor_odm.managers.T</span></code>]</p>
+<p>Base Manager that all type of managers should inherit
+to create a new manager:</p>
+<p>managers.py</p>
+<dl class="simple">
+<dt>class CustomManager(MongoBaseManager[“CustomManager]):</dt><dd><p>pass</p>
+</dd>
+</dl>
+<p>documents.py</p>
+<dl class="simple">
+<dt>class Document(MongoDocument):</dt><dd><p>custom_manager = CustomManager()</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseManager.add_to_class">
+<code class="sig-name descname"><span class="pre">add_to_class</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_class</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.managers.MongoBaseManager.add_to_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseManager.bulk_create">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">bulk_create</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseManager.bulk_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bulk create a list of objects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[T] Created objects with ids</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>objs</strong> – list of objects to create</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseManager.bulk_delete">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">bulk_delete</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ids</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bson.objectid.ObjectId</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="headerlink" href="#motor_odm.managers.MongoBaseManager.bulk_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete many objects using ids</p>
+<dl class="field-list simple">
+</dl>
+<p>:returns int, number of deleted objects</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="motor_odm.managers.MongoBaseQueryManager">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.managers.</span></code><code class="sig-name descname"><span class="pre">MongoBaseQueryManager</span></code><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motor_odm.managers.MongoBaseManager" title="motor_odm.managers.MongoBaseManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">motor_odm.managers.MongoBaseManager</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">motor_odm.managers.T</span></code>]</p>
+<p>query manager responsible for building queries</p>
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.all">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">all</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetch all documents that matches filter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List[T]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.count">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">count</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>count of document that matches the filter
+:return: int</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.debug">
+<code class="sig-name descname"><span class="pre">debug</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>log all fields for debug purpose</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.delete">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">delete</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete all documents that matches filter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int, number of deleted documents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.exclude">
+<code class="sig-name descname"><span class="pre">exclude</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#motor_odm.managers.MongoBaseQueryManager" title="motor_odm.managers.MongoBaseQueryManager"><span class="pre">motor_odm.managers.MongoBaseQueryManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.exclude" title="Permalink to this definition">¶</a></dt>
+<dd><p>exclude fields from being returned when querying</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fields</strong> – excluded fields from projection</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.filter">
+<code class="sig-name descname"><span class="pre">filter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">filter_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#motor_odm.managers.MongoBaseQueryManager" title="motor_odm.managers.MongoBaseQueryManager"><span class="pre">motor_odm.managers.MongoBaseQueryManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.filter" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>add the filter for mongodb find, filter result is not evaluated,</dt><dd><p>and no db access will happen yet</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filter_kwargs</strong> – the filter to apply as a kwargs</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.first">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">first</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.first" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetch the first document that matches filter, returns None if it doesn’t exist
+:return: T</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.get">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">T</span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a document using its fields as filter options</p>
+<p>Document.objects.get(id=”…”)</p>
+<p>:raises DocumentDoestNotExists
+:param kwargs: fields
+:return: MongoDocument</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.limit">
+<code class="sig-name descname"><span class="pre">limit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#motor_odm.managers.MongoBaseQueryManager" title="motor_odm.managers.MongoBaseQueryManager"><span class="pre">motor_odm.managers.MongoBaseQueryManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>limit of the query
+:param count: max count
+:return: MongoBaseQueryBuilder</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.only">
+<code class="sig-name descname"><span class="pre">only</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#motor_odm.managers.MongoBaseQueryManager" title="motor_odm.managers.MongoBaseQueryManager"><span class="pre">motor_odm.managers.MongoBaseQueryManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.only" title="Permalink to this definition">¶</a></dt>
+<dd><p>only return fields when creating a query</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fields</strong> – allowed fields from projection</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.raw_cursor">
+<code class="sig-name descname"><span class="pre">raw_cursor</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#motor_odm.cursor.MongoCursor" title="motor_odm.cursor.MongoCursor"><span class="pre">motor_odm.cursor.MongoCursor</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.raw_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetch all documents that matches filter and return a raw cursor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>MongoCursor[T]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="motor_odm.managers.MongoBaseQueryManager.skip">
+<code class="sig-name descname"><span class="pre">skip</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#motor_odm.managers.MongoBaseQueryManager" title="motor_odm.managers.MongoBaseQueryManager"><span class="pre">motor_odm.managers.MongoBaseQueryManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#motor_odm.managers.MongoBaseQueryManager.skip" title="Permalink to this definition">¶</a></dt>
+<dd><p>limit of the query
+:param skip: skip document
+:return: MongoBaseQueryBuilder</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="motor_odm.managers.MongoQueryManager">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">motor_odm.managers.</span></code><code class="sig-name descname"><span class="pre">MongoQueryManager</span></code><a class="headerlink" href="#motor_odm.managers.MongoQueryManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motor_odm.managers.MongoBaseQueryManager" title="motor_odm.managers.MongoBaseQueryManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">motor_odm.managers.MongoBaseQueryManager</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">motor_odm.managers.T</span></code>]</p>
+<p>default query manager for MongoDocument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-motor_odm.registry">
+<span id="motor-odm-registry-module"></span><h2>motor_odm.registry module<a class="headerlink" href="#module-motor_odm.registry" title="Permalink to this headline">¶</a></h2>
+<p>registry for document classes, that will help to hook
+document and their managers</p>
+<dl class="py function">
+<dt id="motor_odm.registry.clear_registry">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.registry.</span></code><code class="sig-name descname"><span class="pre">clear_registry</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.registry.clear_registry" title="Permalink to this definition">¶</a></dt>
+<dd><p>clear all, for internal use</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="motor_odm.registry.register">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.registry.</span></code><code class="sig-name descname"><span class="pre">register</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_cls</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.registry.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>register a document class, for internal use</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="motor_odm.registry.unregister">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.registry.</span></code><code class="sig-name descname"><span class="pre">unregister</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_cls</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.registry.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove a document class, for internal use</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-motor_odm.utils">
+<span id="motor-odm-utils-module"></span><h2>motor_odm.utils module<a class="headerlink" href="#module-motor_odm.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="motor_odm.utils.to_snake_case">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.utils.</span></code><code class="sig-name descname"><span class="pre">to_snake_case</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#motor_odm.utils.to_snake_case" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="motor_odm.utils.validate_collection_name">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.utils.</span></code><code class="sig-name descname"><span class="pre">validate_collection_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cls_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.utils.validate_collection_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="motor_odm.utils.validate_field_name">
+<code class="sig-prename descclassname"><span class="pre">motor_odm.utils.</span></code><code class="sig-name descname"><span class="pre">validate_field_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#motor_odm.utils.validate_field_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-motor_odm">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-motor_odm" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Ramzi Tannous.
+
+    </p>
+  </div>
+
+
+
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+
+
+
+
+
+</body>
+</html>

@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 import pytest
 from bson import ObjectId
 from pydantic import Field, ValidationError
-
 from tests.document import PersonDocument
 
 from mongo_odm.config import configure, disconnect

@@ -1,5 +1,4 @@
 import pytest
-
 from tests.document import PersonDocument
 
 from mongo_odm.cursor import MongoCursor

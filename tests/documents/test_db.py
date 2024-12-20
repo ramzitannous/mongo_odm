@@ -1,6 +1,5 @@
 import pytest
 from bson import ObjectId
-
 from tests.document import PersonDocument
 
 from mongo_odm.exceptions import DocumentDoestNotExists
